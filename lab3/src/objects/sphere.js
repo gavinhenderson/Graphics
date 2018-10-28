@@ -130,10 +130,7 @@ class Sphere {
   drawSphere(drawMode, gl, program) {
     let i;
 
-    gl.bindBuffer(
-      gl.ARRAY_BUFFER,
-      this.sphereBufferObject,
-    );
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.sphereBufferObject);
     gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(0);
 
@@ -147,13 +144,13 @@ class Sphere {
 
     /* set the point size */
     //console.log("DOES THIS EXIST", gl.program);
-    let pointSize = gl.getUniformLocation(program, "pointSize");
-    gl.uniform1f(pointSize, 3);
+    //let pointSize = gl.getUniformLocation(program, "pointSize");
+    //gl.uniform1f(pointSize, 3);
 
-    gl.cullFace(gl.FRONT_AND_BACK);
+    //  gl.cullFace(gl.FRONT_AND_BACK);
 
     // if (drawMode == 2) {
-      gl.drawArrays(gl.TRIANGLE_FAN, 0, this.numspherevertices);
+    gl.drawArrays(gl.TRIANGLE_FAN, 0, this.numspherevertices);
     // } else {
     //   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.elementbuffer);
     //   gl.drawElements(gl.TRIANGLE_FAN, this.numlongs + 2, gl.UNSIGNED_INT, 0);
