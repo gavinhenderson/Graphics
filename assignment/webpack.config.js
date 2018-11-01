@@ -30,6 +30,10 @@ module.exports = {
         test: /\.frag$/,
         use: "raw-loader",
       },
+      {
+        test: /\.obj$/,
+        use: "raw-loader",
+      },
     ],
   },
 };

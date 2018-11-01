@@ -1,4 +1,11 @@
-varying lowp vec4 vColor;
-void main(void) {
-  gl_FragColor = vColor;
+#version 300 es
+
+precision mediump float;
+in vec4 fcolour;
+out vec4 outputColor;
+
+void main()
+{
+	outputColor = fcolour;
 }
+

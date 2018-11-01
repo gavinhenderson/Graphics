@@ -1,17 +1,20 @@
 import { importShader } from "./shaders";
 import { createProgram, getWebGLContext } from "./utils";
-import { Cylinder } from "./shapes";
-import { mat4 } from "gl-matrix";
+import { Turbine } from "./shapes";
+import { mat4, vec3 } from "gl-matrix";
 
-var cubeRotation = 0.0;
-
+Math.radians = (degrees) => (Math.PI * degrees) / 180;
+let rotation = 0;
+let turbine = new Turbine();
 main();
 
 function main() {
   /** @type {WebGLRenderingContext} */
   let gl = getWebGLContext();
 
-  // Load the shaders from file
+  let vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+
   const vertShader = importShader(gl.VERTEX_SHADER, gl);
   const fragShader = importShader(gl.FRAGMENT_SHADER, gl);
 
@@ -21,155 +24,78 @@ function main() {
   const programInfo = {
     program: shaderProgram,
     attribLocations: {
-      vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
-      vertexColor: gl.getAttribLocation(shaderProgram, "aVertexColor"),
+      vertexPosition: gl.getAttribLocation(shaderProgram, "position"),
+      normal: gl.getAttribLocation(shaderProgram, "normal"),
     },
     uniformLocations: {
-      projectionMatrix: gl.getUniformLocation(
-        shaderProgram,
-        "uProjectionMatrix",
-      ),
-      modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+      projection: gl.getUniformLocation(shaderProgram, "projection"),
+      model: gl.getUniformLocation(shaderProgram, "model"),
+      view: gl.getUniformLocation(shaderProgram, "view"),
     },
   };
 
-  let buffers = Cylinder.initBuffers(gl);
+  turbine.initBuffers(gl);
 
   let then = 0;
-
-  // Draw the scene repeatedly
   function render(now) {
     now *= 0.001; // convert to seconds
     const deltaTime = now - then;
     then = now;
 
-    drawScene(gl, programInfo, buffers, deltaTime);
+    drawScene(gl, programInfo, deltaTime);
 
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);
 
-  function drawScene(gl, programInfo, buffers, deltaTime) {
+  /**
+   *
+   * @param {WebGLRenderingContext} gl
+   * @param {*} programInfo
+   * @param {*} deltaTime
+   */
+  function drawScene(gl, programInfo, deltaTime) {
     gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
     gl.clearDepth(1.0); // Clear everything
     gl.enable(gl.DEPTH_TEST); // Enable depth testing
     gl.depthFunc(gl.LEQUAL); // Near things obscure far things
-
-    // Clear the canvas before we start drawing on it.
-
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    // Create a perspective matrix, a special matrix that is
-    // used to simulate the distortion of perspective in a camera.
-    // Our field of view is 45 degrees, with a width/height
-    // ratio that matches the display size of the canvas
-    // and we only want to see objects between 0.1 units
-    // and 100 units away from the camera.
-
-    const fieldOfView = (45 * Math.PI) / 180; // in radians
-    const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-    const zNear = 0.1;
-    const zFar = 100.0;
-    const projectionMatrix = mat4.create();
-
-    // note: glmatrix.js always has the first argument
-    // as the destination to receive the result.
-    mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
-
-    // Set the drawing position to the "identity" point, which is
-    // the center of the scene.
-    const modelViewMatrix = mat4.create();
-
-    // Now move the drawing position a bit to where we want to
-    // start drawing the square.
-
-    mat4.translate(
-      modelViewMatrix, // destination matrix
-      modelViewMatrix, // matrix to translate
-      [-0.0, 0.0, -6.0],
-    ); // amount to translate
-    mat4.rotate(
-      modelViewMatrix, // destination matrix
-      modelViewMatrix, // matrix to rotate
-      cubeRotation, // amount to rotate in radians
-      [0, 0, 1],
-    ); // axis to rotate around (Z)
-    mat4.rotate(
-      modelViewMatrix, // destination matrix
-      modelViewMatrix, // matrix to rotate
-      cubeRotation * 0.7, // amount to rotate in radians
-      [0, 1, 0],
-    ); // axis to rotate around (X)
-
-    // Tell WebGL how to pull out the positions from the position
-    // buffer into the vertexPosition attribute
-    {
-      const numComponents = 3;
-      const type = gl.FLOAT;
-      const normalize = false;
-      const stride = 0;
-      const offset = 0;
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
-      gl.vertexAttribPointer(
-        programInfo.attribLocations.vertexPosition,
-        numComponents,
-        type,
-        normalize,
-        stride,
-        offset,
-      );
-      gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
-    }
-
-    // Tell WebGL how to pull out the colors from the color buffer
-    // into the vertexColor attribute.
-    {
-      const numComponents = 4;
-      const type = gl.FLOAT;
-      const normalize = false;
-      const stride = 0;
-      const offset = 0;
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
-      gl.vertexAttribPointer(
-        programInfo.attribLocations.vertexColor,
-        numComponents,
-        type,
-        normalize,
-        stride,
-        offset,
-      );
-      gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
-    }
-
-    // Tell WebGL which indices to use to index the vertices
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
-
-    // Tell WebGL to use our program when drawing
-
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the canvas before we start drawing on it.
     gl.useProgram(programInfo.program);
 
-    // Set the shader uniforms
+    // Projection Matrix
+    const aspectRatio = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    const projection = mat4.create();
+    mat4.perspective(projection, Math.radians(30), aspectRatio, 0.1, 100);
 
-    gl.uniformMatrix4fv(
-      programInfo.uniformLocations.projectionMatrix,
-      false,
-      projectionMatrix,
+    // View Matrix
+    const view = mat4.create();
+    mat4.lookAt(
+      view,
+      vec3.fromValues(0, 0, 4),
+      vec3.fromValues(0, 0, 0),
+      vec3.fromValues(0, 1, 0),
     );
+
+    // Model Position Matrix
+    const model = mat4.create();
+    mat4.translate(model, model, [0, 0, -10]);
+    mat4.rotate(model, model, rotation, [0, 0, 1]);
+    mat4.rotate(model, model, rotation, [0, 1, 0]);
+    mat4.rotate(model, model, rotation, [1, 0, 0]);
+    mat4.scale(model, model, vec3.fromValues(0.1, 0.1, 0.1));
+
+    // Load Uniforms
     gl.uniformMatrix4fv(
-      programInfo.uniformLocations.modelViewMatrix,
+      programInfo.uniformLocations.projection,
       false,
-      modelViewMatrix,
+      projection,
     );
+    gl.uniformMatrix4fv(programInfo.uniformLocations.model, false, model);
+    gl.uniformMatrix4fv(programInfo.uniformLocations.view, false, view);
 
-    {
-      const vertexCount = 36;
-      const type = gl.UNSIGNED_SHORT;
-      const offset = 0;
-      gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
-    }
+    turbine.draw(gl, programInfo);
 
-    // Update the rotation for the next draw
-
-    cubeRotation += deltaTime;
+    gl.useProgram(null);
+    rotation += deltaTime;
   }
 }

@@ -1,3 +1,3 @@
-import Cylinder from "./cylinder";
+import Turbine from "./turbine";
 
-export { Cylinder };
+export { Turbine };
