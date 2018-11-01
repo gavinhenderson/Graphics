@@ -2,11 +2,36 @@ import { importShader } from "./shaders";
 import { createProgram, getWebGLContext } from "./utils";
 import { Turbine } from "./shapes";
 import { mat4, vec3 } from "gl-matrix";
+import Camera from "./camera";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 let rotation = 0;
 let turbine = new Turbine();
+let camera = new Camera();
 main();
+
+window.onkeypress = (event) => {
+  let { key } = event;
+
+  switch (key) {
+    case "ArrowLeft": {
+      camera.moveLeft();
+      break;
+    }
+    case "ArrowRight": {
+      camera.moveRight();
+      break;
+    }
+    case "ArrowUp": {
+      camera.moveIn();
+      break;
+    }
+    case "ArrowDown": {
+      camera.moveOut();
+      break;
+    }
+  }
+};
 
 function main() {
   /** @type {WebGLRenderingContext} */
@@ -68,21 +93,15 @@ function main() {
     mat4.perspective(projection, Math.radians(30), aspectRatio, 0.1, 100);
 
     // View Matrix
-    const view = mat4.create();
-    mat4.lookAt(
-      view,
-      vec3.fromValues(0, 0, 4),
-      vec3.fromValues(0, 0, 0),
-      vec3.fromValues(0, 1, 0),
-    );
+    const view = camera.getView();
 
     // Model Position Matrix
     const model = mat4.create();
-    mat4.translate(model, model, [0, 0, -10]);
-    mat4.rotate(model, model, rotation, [0, 0, 1]);
-    mat4.rotate(model, model, rotation, [0, 1, 0]);
-    mat4.rotate(model, model, rotation, [1, 0, 0]);
-    mat4.scale(model, model, vec3.fromValues(0.1, 0.1, 0.1));
+    mat4.translate(model, model, [0, -3, 0]);
+    // mat4.rotate(model, model, rotation, [0, 0, 1]);
+    // mat4.rotate(model, model, rotation, [0, 1, 0]);
+    // mat4.rotate(model, model, rotation, [1, 0, 0]);
+    mat4.scale(model, model, vec3.fromValues(0.5, 0.5, 0.5));
 
     // Load Uniforms
     gl.uniformMatrix4fv(

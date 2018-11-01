@@ -1,11 +1,12 @@
 import turbine from "./turbine";
+import body from "./body";
+import fins from "./fins";
 
 class Turbine {
   constructor() {
-    this.verts = new Float32Array(turbine.verts);
-    this.normals = new Float32Array(turbine.normals);
-    this.indicies = new Float32Array(turbine.indices);
-    console.log(this);
+    this.verts = new Float32Array([...body.verts, ...fins.verts]);
+    this.normals = new Float32Array([...body.normals, ...fins.normals]);
+    this.indicies = new Float32Array([...body.indices, ...fins.indices]);
   }
 
   /**
