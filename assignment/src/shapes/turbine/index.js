@@ -7,6 +7,7 @@ class Turbine {
     this.position = position;
     this.body = new Body();
     this.fins = new Fins();
+    this.startRot = Math.random();
   }
 
   initBuffers(gl) {
@@ -27,6 +28,7 @@ class Turbine {
 
     mat4.translate(model, model, [0, 6.7, 0.3]);
     mat4.rotate(model, model, rotation, [1, 0, 0]);
+    mat4.rotate(model, model, this.startRot, [1, 0, 0]);
     gl.uniformMatrix4fv(programInfo.uniformLocations.model, false, model);
 
     this.fins.draw(gl, programInfo);

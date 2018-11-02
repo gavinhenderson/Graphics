@@ -1,12 +1,14 @@
 #version 300 es
 
 // These are the vertex attributes
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 normal;
+layout(location = 1) in vec3 position;
+layout(location = 2) in vec3 normal;
+layout(location = 3) in vec3 colour;
 
 // Uniform variables are passed in from the application
 uniform mat4 model, view, projection;
 uniform vec4 light_direction4;
+uniform int colourMode;
 
 // Output the vertex colour - to be rasterized into pixel fragments
 out vec4 fcolour;
@@ -29,14 +31,16 @@ void main()
 	
 	float diffuse_component = max(dot(normalised_normal, light_direction), 0.0f);
 
-	diffuse_colour = vec4(0.2, 0.2, 0.2, 1.0);
+	diffuse_colour = vec4(colour, 1.0);
 
 	// Define the vertex colour
 	vec4 ambient = diffuse_colour * 0.1;
 
 	vec4 diffuse_lighting = diffuse_component * diffuse_colour;
 
-	fcolour = ambient + diffuse_lighting;
+  if(colourMode == 1) {
+	  fcolour = ambient + diffuse_lighting;
+  }
 
 	// Define the vertex position
 	gl_Position = projection * view * model * position_h;

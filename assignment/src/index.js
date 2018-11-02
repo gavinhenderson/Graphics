@@ -1,16 +1,18 @@
 import { importShader } from "./shaders";
 import { createProgram, getWebGLContext, Stack } from "./utils";
-import { Turbine } from "./shapes";
 import { mat4, vec3, vec4 } from "gl-matrix";
 import Camera from "./camera";
+import Windfarm from "./windfarm";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 let rotation = 0;
-let turbine1 = new Turbine([-1, 0, -1]);
-let turbine2 = new Turbine([1, 0, 1]);
 let camera = new Camera();
-let lightDirection = vec4.fromValues(1, 1, 1, 1);
+let lightDirection = vec4.fromValues(-1, 0, -1, 0.5);
 let rotSpeed = 1;
+
+// 1: Diffuse
+// 2: Ambient
+window.colourMode = 1;
 
 main();
 
@@ -62,19 +64,21 @@ function main() {
   const programInfo = {
     program: shaderProgram,
     attribLocations: {
-      vertexPosition: gl.getAttribLocation(shaderProgram, "position"),
-      normal: gl.getAttribLocation(shaderProgram, "normal"),
+      vertexPosition: 1,
+      normal: 2,
+      colour: 3,
     },
     uniformLocations: {
       proj: gl.getUniformLocation(shaderProgram, "projection"),
       model: gl.getUniformLocation(shaderProgram, "model"),
       view: gl.getUniformLocation(shaderProgram, "view"),
       lightDirection: gl.getUniformLocation(shaderProgram, "light_direction4"),
+      colourMode: gl.getUniformLocation(shaderProgram, "colourMode"),
     },
   };
 
-  turbine1.initBuffers(gl);
-  turbine2.initBuffers(gl);
+  let windfarm = new Windfarm();
+  windfarm.initBuffers(gl);
 
   let then = 0;
   function render(now) {
@@ -114,11 +118,9 @@ function main() {
     gl.uniformMatrix4fv(programInfo.uniformLocations.proj, false, projection);
     gl.uniformMatrix4fv(programInfo.uniformLocations.view, false, view);
     gl.uniform4fv(programInfo.uniformLocations.lightDirection, lightDirection);
+    gl.uniform1i(programInfo.uniformLocations.colourMode, colourMode);
 
-    turbine1.draw(gl, programInfo, rotation);
-
-    let differentRot = rotation / 2;
-    turbine2.draw(gl, programInfo, differentRot);
+    windfarm.draw(gl, programInfo, rotation);
 
     gl.useProgram(null);
 

@@ -9,14 +9,13 @@ Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
 class Camera {
   constructor() {
-    this.radius = 8;
+    this.radius = 30;
     this.increment = 0.5;
-    this.angleIncrement = 15;
-    this.angle = 0;
+    this.angleIncrement = 3;
+    this.angle = 240;
 
-    this.x = 0;
     this.y = 0;
-    this.z = this.radius;
+    this.updateCoords();
   }
 
   updateCoords() {
