@@ -29,10 +29,10 @@ void main()
 	
 	float diffuse_component = max(dot(normalised_normal, light_direction), 0.0f);
 
-	diffuse_colour = vec4(0.0, 1.0, 0, 1.0);
+	diffuse_colour = vec4(0.2, 0.2, 0.2, 1.0);
 
 	// Define the vertex colour
-	vec4 ambient = diffuse_colour * 0.5;
+	vec4 ambient = diffuse_colour * 0.1;
 
 	vec4 diffuse_lighting = diffuse_component * diffuse_colour;
 

@@ -116,7 +116,9 @@ function main() {
     gl.uniform4fv(programInfo.uniformLocations.lightDirection, lightDirection);
 
     turbine1.draw(gl, programInfo, rotation);
-    turbine2.draw(gl, programInfo, rotation);
+
+    let differentRot = rotation / 2;
+    turbine2.draw(gl, programInfo, differentRot);
 
     gl.useProgram(null);
 
