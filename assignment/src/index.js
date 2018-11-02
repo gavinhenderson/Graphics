@@ -14,7 +14,7 @@ let rotSpeed = 1;
 
 main();
 
-window.onkeypress = (event) => {
+window.onkeydown = (event) => {
   let { key } = event;
   console.log(rotSpeed);
 
