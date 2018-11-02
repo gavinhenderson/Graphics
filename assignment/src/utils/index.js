@@ -1,3 +1,5 @@
+import Stack from "./stack";
+
 /**
  *
  * @param {WebGLRenderingContext} gl
@@ -29,4 +31,4 @@ function getWebGLContext() {
   return gl;
 }
 
-module.exports = { createProgram, getWebGLContext };
+export { createProgram, getWebGLContext, Stack };

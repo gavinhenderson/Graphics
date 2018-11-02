@@ -35,8 +35,6 @@ class Camera {
       this.angle += 360;
       return;
     }
-
-    console.log(this.angle);
   }
 
   moveRight() {

@@ -1,53 +1,33 @@
-import turbine from "./turbine";
-import body from "./body";
-import fins from "./fins";
+import Body from "./body";
+import Fins from "./fins";
+import { mat4, vec3 } from "gl-matrix";
 
 class Turbine {
   constructor() {
-    this.verts = new Float32Array([...body.verts, ...fins.verts]);
-    this.normals = new Float32Array([...body.normals, ...fins.normals]);
-    this.indicies = new Float32Array([...body.indices, ...fins.indices]);
+    this.body = new Body();
+    this.fins = new Fins();
   }
 
-  /**
-   * @param {WebGLRenderingContext} gl
-   */
   initBuffers(gl) {
-    this.vertexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, this.verts, gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-    this.normalsBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.normalsBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, this.normals, gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    this.body.initBuffers(gl);
+    this.fins.initBuffers(gl);
   }
 
-  /**
-   *
-   * @param {WebGLRenderingContext} gl
-   * @param {*} programInfo
-   */
-  draw(gl, programInfo) {
-    const { attribLocations } = programInfo;
+  draw(gl, programInfo, rotation) {
+    // Model Position Matrix
+    const model = mat4.create();
+    mat4.translate(model, model, [0, -2, 0]);
+    mat4.scale(model, model, vec3.fromValues(0.5, 0.5, 0.5));
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-    gl.enableVertexAttribArray(attribLocations.vertexPosition);
-    gl.vertexAttribPointer(
-      attribLocations.vertexPosition,
-      3,
-      gl.FLOAT,
-      false,
-      0,
-      0,
-    );
+    gl.uniformMatrix4fv(programInfo.uniformLocations.model, false, model);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.normalsBuffer);
-    gl.enableVertexAttribArray(attribLocations.normal);
-    gl.vertexAttribPointer(attribLocations.normal, 3, gl.FLOAT, false, 0, 0);
+    this.body.draw(gl, programInfo);
 
-    gl.drawArrays(gl.TRIANGLES, 0, this.indicies.length);
+    mat4.translate(model, model, [0, 6.7, 0.3]);
+    mat4.rotate(model, model, rotation, [1, 0, 0]);
+    gl.uniformMatrix4fv(programInfo.uniformLocations.model, false, model);
+
+    this.fins.draw(gl, programInfo);
   }
 }
 

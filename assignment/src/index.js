@@ -1,5 +1,5 @@
 import { importShader } from "./shaders";
-import { createProgram, getWebGLContext } from "./utils";
+import { createProgram, getWebGLContext, Stack } from "./utils";
 import { Turbine } from "./shapes";
 import { mat4, vec3, vec4 } from "gl-matrix";
 import Camera from "./camera";
@@ -82,11 +82,11 @@ function main() {
    * @param {*} deltaTime
    */
   function drawScene(gl, programInfo, deltaTime) {
-    gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
-    gl.clearDepth(1.0); // Clear everything
-    gl.enable(gl.DEPTH_TEST); // Enable depth testing
-    gl.depthFunc(gl.LEQUAL); // Near things obscure far things
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the canvas before we start drawing on it.
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clearDepth(1.0);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(programInfo.program);
 
     // Projection Matrix
@@ -97,27 +97,15 @@ function main() {
     // View Matrix
     const view = camera.getView();
 
-    // Model Position Matrix
-    const model = mat4.create();
-    mat4.translate(model, model, [0, -3, 0]);
-    // mat4.rotate(model, model, rotation, [0, 0, 1]);
-    // mat4.rotate(model, model, rotation, [0, 1, 0]);
-    // mat4.rotate(model, model, rotation, [1, 0, 0]);
-    mat4.scale(model, model, vec3.fromValues(0.5, 0.5, 0.5));
-
-    //console.log(lightDirection);
-    //lightDirection = lightDirection * view;
-    //console.log(lightDirection);
-
     // Load Uniforms
     gl.uniformMatrix4fv(programInfo.uniformLocations.proj, false, projection);
-    gl.uniformMatrix4fv(programInfo.uniformLocations.model, false, model);
     gl.uniformMatrix4fv(programInfo.uniformLocations.view, false, view);
     gl.uniform4fv(programInfo.uniformLocations.lightDirection, lightDirection);
 
-    turbine.draw(gl, programInfo);
+    turbine.draw(gl, programInfo, rotation);
 
     gl.useProgram(null);
+
     rotation += deltaTime;
   }
 }
