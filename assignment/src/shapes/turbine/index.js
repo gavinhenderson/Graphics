@@ -3,7 +3,8 @@ import Fins from "./fins";
 import { mat4, vec3 } from "gl-matrix";
 
 class Turbine {
-  constructor() {
+  constructor(position) {
+    this.position = position;
     this.body = new Body();
     this.fins = new Fins();
   }
@@ -16,6 +17,7 @@ class Turbine {
   draw(gl, programInfo, rotation) {
     // Model Position Matrix
     const model = mat4.create();
+    mat4.translate(model, model, this.position);
     mat4.translate(model, model, [0, -2, 0]);
     mat4.scale(model, model, vec3.fromValues(0.5, 0.5, 0.5));
 

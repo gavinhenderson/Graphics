@@ -6,13 +6,17 @@ import Camera from "./camera";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 let rotation = 0;
-let turbine = new Turbine();
+let turbine1 = new Turbine([-1, 0, -1]);
+let turbine2 = new Turbine([1, 0, 1]);
 let camera = new Camera();
 let lightDirection = vec4.fromValues(1, 1, 1, 1);
+let rotSpeed = 1;
+
 main();
 
 window.onkeypress = (event) => {
   let { key } = event;
+  console.log(rotSpeed);
 
   switch (key) {
     case "ArrowLeft": {
@@ -29,6 +33,14 @@ window.onkeypress = (event) => {
     }
     case "ArrowDown": {
       camera.moveOut();
+      break;
+    }
+    case "q": {
+      rotSpeed++;
+      break;
+    }
+    case "w": {
+      rotSpeed--;
       break;
     }
   }
@@ -61,7 +73,8 @@ function main() {
     },
   };
 
-  turbine.initBuffers(gl);
+  turbine1.initBuffers(gl);
+  turbine2.initBuffers(gl);
 
   let then = 0;
   function render(now) {
@@ -102,10 +115,11 @@ function main() {
     gl.uniformMatrix4fv(programInfo.uniformLocations.view, false, view);
     gl.uniform4fv(programInfo.uniformLocations.lightDirection, lightDirection);
 
-    turbine.draw(gl, programInfo, rotation);
+    turbine1.draw(gl, programInfo, rotation);
+    turbine2.draw(gl, programInfo, rotation);
 
     gl.useProgram(null);
 
-    rotation += deltaTime;
+    rotation += deltaTime * rotSpeed;
   }
 }
