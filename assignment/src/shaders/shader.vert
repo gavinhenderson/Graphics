@@ -1,20 +1,5 @@
 #version 300 es
 
-/*
-precision mediump float;
-
-in vec4 aVertexPosition;
-uniform mat4 uModelViewMatrix;
-uniform mat4 uProjectionMatrix;
-
-void main(void) {
-  gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-}*/
-
-// Starter vertex shader for lab3
-// THe goal is to update this shader to implement Gourand shading
-// which is per-vertex lighting
-
 // These are the vertex attributes
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
@@ -28,11 +13,8 @@ out vec4 fcolour;
 
 void main()
 {
-  // vec3 view_direction = vec3();
   vec4 light_direction_view = light_direction4 * view;
 	vec3 light_direction = normalize(light_direction_view.xyz / light_direction_view.w);
-  // light_direction = normalize(light_direction);
-  // vec3 light_direction = light_direction4.xyz / light_direction4.w;
 
 	mat4 model_view = view * model;
 
