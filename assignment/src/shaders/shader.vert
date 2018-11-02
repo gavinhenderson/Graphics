@@ -21,13 +21,19 @@ layout(location = 1) in vec3 normal;
 
 // Uniform variables are passed in from the application
 uniform mat4 model, view, projection;
+uniform vec4 light_direction4;
 
 // Output the vertex colour - to be rasterized into pixel fragments
 out vec4 fcolour;
 
 void main()
 {
-	vec3 light_direction = normalize(vec3(1,1,1));
+  // vec3 view_direction = vec3();
+  vec4 light_direction_view = light_direction4 * view;
+	vec3 light_direction = normalize(light_direction_view.xyz / light_direction_view.w);
+  // light_direction = normalize(light_direction);
+  // vec3 light_direction = light_direction4.xyz / light_direction4.w;
+
 	mat4 model_view = view * model;
 
 	mat3 normal_matrix = transpose(inverse(mat3(model_view)));
@@ -44,7 +50,7 @@ void main()
 	diffuse_colour = vec4(0.0, 1.0, 0, 1.0);
 
 	// Define the vertex colour
-	vec4 ambient = diffuse_colour * 0.2;
+	vec4 ambient = diffuse_colour * 0.5;
 
 	vec4 diffuse_lighting = diffuse_component * diffuse_colour;
 

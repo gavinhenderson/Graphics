@@ -1,13 +1,14 @@
 import { importShader } from "./shaders";
 import { createProgram, getWebGLContext } from "./utils";
 import { Turbine } from "./shapes";
-import { mat4, vec3 } from "gl-matrix";
+import { mat4, vec3, vec4 } from "gl-matrix";
 import Camera from "./camera";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 let rotation = 0;
 let turbine = new Turbine();
 let camera = new Camera();
+let lightDirection = vec4.fromValues(1, 1, 1, 1);
 main();
 
 window.onkeypress = (event) => {
@@ -53,9 +54,10 @@ function main() {
       normal: gl.getAttribLocation(shaderProgram, "normal"),
     },
     uniformLocations: {
-      projection: gl.getUniformLocation(shaderProgram, "projection"),
+      proj: gl.getUniformLocation(shaderProgram, "projection"),
       model: gl.getUniformLocation(shaderProgram, "model"),
       view: gl.getUniformLocation(shaderProgram, "view"),
+      lightDirection: gl.getUniformLocation(shaderProgram, "light_direction4"),
     },
   };
 
@@ -103,14 +105,15 @@ function main() {
     // mat4.rotate(model, model, rotation, [1, 0, 0]);
     mat4.scale(model, model, vec3.fromValues(0.5, 0.5, 0.5));
 
+    //console.log(lightDirection);
+    //lightDirection = lightDirection * view;
+    //console.log(lightDirection);
+
     // Load Uniforms
-    gl.uniformMatrix4fv(
-      programInfo.uniformLocations.projection,
-      false,
-      projection,
-    );
+    gl.uniformMatrix4fv(programInfo.uniformLocations.proj, false, projection);
     gl.uniformMatrix4fv(programInfo.uniformLocations.model, false, model);
     gl.uniformMatrix4fv(programInfo.uniformLocations.view, false, view);
+    gl.uniform4fv(programInfo.uniformLocations.lightDirection, lightDirection);
 
     turbine.draw(gl, programInfo);
 

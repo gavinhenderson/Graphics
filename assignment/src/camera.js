@@ -11,7 +11,7 @@ class Camera {
   constructor() {
     this.radius = 8;
     this.increment = 0.5;
-    this.angleIncrement = 10;
+    this.angleIncrement = 15;
     this.angle = 0;
 
     this.x = 0;
@@ -72,6 +72,8 @@ class Camera {
       vec3.fromValues(0, 0, 0),
       vec3.fromValues(0, 1, 0),
     );
+
+    // console.log(view);
 
     return view;
   }
