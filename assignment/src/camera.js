@@ -1,4 +1,6 @@
 import { mat4, vec3 } from "gl-matrix";
+Math.radians = (degrees) => (Math.PI * degrees) / 180;
+
 // lookAt(out, eye, center, up)
 // out 	    mat4 	mat4 frustum matrix will be written into
 // eye 	    vec3 	Position of the viewer
@@ -14,7 +16,13 @@ class Camera {
 
     this.x = 0;
     this.y = 0;
-    this.z = 4;
+    this.z = this.radius;
+  }
+
+  updateCoords() {
+    let theta = Math.radians(this.angle);
+    this.z = Math.cos(theta) * this.radius;
+    this.x = Math.sin(theta) * this.radius;
   }
 
   normaliseAngle() {
@@ -34,41 +42,33 @@ class Camera {
   moveRight() {
     this.angle += this.angleIncrement;
     this.normaliseAngle();
+    this.updateCoords();
   }
 
   moveLeft() {
     this.angle -= this.angleIncrement;
     this.normaliseAngle();
+    this.updateCoords();
   }
 
   moveIn() {
     this.radius -= this.increment;
+    this.normaliseAngle();
+    this.updateCoords();
   }
 
   moveOut() {
     this.radius += this.increment;
+    this.normaliseAngle();
+    this.updateCoords();
   }
 
   getView() {
-    // Limit angle to 0 - 180
-    // This will be corrected later
-    // let angle = this.angle > 180 ? this.angle - 180 : this.angle;
-
-    //Assuming angle is between 0 - 90
-    let theta = this.angle;
-    let z = Math.sin(theta) * this.radius;
-    let x = Math.sqrt(this.radius * this.radius - z * z);
-
-    console.log("THETA", theta);
-    console.log("Z", z);
-    console.log("X", x);
-    console.log(this.angle);
-
     const view = mat4.create();
 
     mat4.lookAt(
       view,
-      vec3.fromValues(z, 0, x),
+      vec3.fromValues(this.x, 0, this.z),
       vec3.fromValues(0, 0, 0),
       vec3.fromValues(0, 1, 0),
     );
