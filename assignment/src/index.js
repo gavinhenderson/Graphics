@@ -9,6 +9,7 @@ let rotation = 0;
 let camera = new Camera();
 let lightDirection = vec4.fromValues(-1, 0, -1, 0.5);
 let rotSpeed = 1;
+window.windfarm = new Windfarm();
 
 // 1: Diffuse
 // 2: Ambient
@@ -77,7 +78,6 @@ function main() {
     },
   };
 
-  let windfarm = new Windfarm();
   windfarm.initBuffers(gl);
 
   let then = 0;
