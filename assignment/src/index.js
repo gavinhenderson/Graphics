@@ -3,11 +3,12 @@ import { createProgram, getWebGLContext, Stack } from "./utils";
 import { mat4, vec3, vec4 } from "gl-matrix";
 import Camera from "./camera";
 import Windfarm from "./windfarm";
+import { Floor } from "./shapes";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 let rotation = 0;
 let camera = new Camera();
-let lightDirection = vec4.fromValues(-1, 0, -1, 0.5);
+let lightDirection = vec4.fromValues(1, 1, 1, 1);
 let rotSpeed = 1;
 window.windfarm = new Windfarm();
 
@@ -94,6 +95,9 @@ function main() {
     },
   };
 
+  let floor = new Floor();
+
+  floor.initBuffers(gl);
   windfarm.initBuffers(gl);
 
   let then = 0;
@@ -136,6 +140,7 @@ function main() {
     gl.uniform4fv(programInfo.uniformLocations.lightDirection, lightDirection);
     gl.uniform1i(programInfo.uniformLocations.colourMode, colourMode);
 
+    floor.draw(gl, programInfo);
     windfarm.draw(gl, programInfo, rotation);
 
     gl.useProgram(null);

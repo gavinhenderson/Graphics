@@ -1,3 +1,4 @@
 import Turbine from "./turbine";
+import Floor from "./floor";
 
-export { Turbine };
+export { Turbine, Floor };
