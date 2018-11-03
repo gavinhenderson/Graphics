@@ -1,5 +1,5 @@
 import { importShader } from "./shaders";
-import { createProgram, getWebGLContext, Stack } from "./utils";
+import { createProgram, getWebGLContext, Stack, convertRGB } from "./utils";
 import { mat4, vec3, vec4 } from "gl-matrix";
 import Camera from "./camera";
 import Windfarm from "./windfarm";
@@ -119,7 +119,7 @@ function main() {
    * @param {*} deltaTime
    */
   function drawScene(gl, programInfo, deltaTime) {
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clearColor(...convertRGB(30, 144, 255), 1.0);
     gl.clearDepth(1.0);
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LEQUAL);

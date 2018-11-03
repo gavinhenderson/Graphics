@@ -6,7 +6,7 @@ class Fins {
     this.verts = new Float32Array(fins.verts);
     this.normals = new Float32Array(fins.normals);
     this.indicies = new Float32Array(fins.indices);
-    this.genColours(convertRGB(128, 128, 128));
+    this.genColours(convertRGB(200, 200, 200));
   }
 
   genColours(colour) {

@@ -1,4 +1,5 @@
 import { convertRGB } from "../utils";
+import { mat4, vec3 } from "gl-matrix";
 
 const verts = [
   -0.25,
@@ -28,7 +29,9 @@ class Floor {
   constructor() {
     this.verts = new Float32Array(verts);
     this.normals = new Float32Array(normals);
-    this.colours = new Float32Array(this.genColours(convertRGB(0, 1, 0)));
+    this.genColours(convertRGB(124, 252, 0));
+
+    console.log(this);
   }
 
   /**
@@ -57,6 +60,12 @@ class Floor {
    * @param {*} programInfo
    */
   draw(gl, programInfo) {
+    const model = mat4.create();
+    mat4.translate(model, model, [0, -2, 0]);
+    mat4.scale(model, model, vec3.fromValues(100, 0, 100));
+
+    gl.uniformMatrix4fv(programInfo.uniformLocations.model, false, model);
+
     const { attribLocations } = programInfo;
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
