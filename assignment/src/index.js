@@ -17,24 +17,40 @@ window.colourMode = 1;
 
 main();
 
+window.onkeyup = (event) => {
+  let key = event.key.toLowerCase();
+
+  switch (key) {
+    case "e": {
+      windfarm.addWindmill();
+      break;
+    }
+    case "r": {
+      windfarm.removeWindmill();
+      break;
+    }
+  }
+};
+
 window.onkeydown = (event) => {
   let { key } = event;
+  key = key.toLowerCase();
   console.log(rotSpeed);
 
   switch (key) {
-    case "ArrowLeft": {
+    case "arrowleft": {
       camera.moveLeft();
       break;
     }
-    case "ArrowRight": {
+    case "arrowright": {
       camera.moveRight();
       break;
     }
-    case "ArrowUp": {
+    case "arrowup": {
       camera.moveIn();
       break;
     }
-    case "ArrowDown": {
+    case "arrowdown": {
       camera.moveOut();
       break;
     }

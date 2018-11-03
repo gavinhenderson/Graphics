@@ -22,6 +22,16 @@ class Windfarm {
     });
   }
 
+  addWindmill() {
+    if (this.numberOfTurbines + 1 > this.turbineLocations.length) return;
+    this.numberOfTurbines++;
+  }
+
+  removeWindmill() {
+    if (this.numberOfTurbines - 1 < 1) return;
+    this.numberOfTurbines--;
+  }
+
   initBuffers(gl) {
     this.turbines.forEach((current) => current.initBuffers(gl));
   }
