@@ -15,6 +15,8 @@ window.windfarm = new Windfarm();
 // 1: Diffuse
 // 2: Ambient
 window.colourMode = 1;
+let colourModes = ["Diffuse", "Direction"];
+let colourModeElement = document.querySelector(".lighting-mode");
 
 main();
 
@@ -29,6 +31,11 @@ window.onkeyup = (event) => {
     case "r": {
       windfarm.removeWindmill();
       break;
+    }
+    case "t": {
+      colourMode++;
+      if (colourMode > 2) colourMode = 1;
+      colourModeElement.innerHTML = colourModes[colourMode - 1];
     }
   }
 };
