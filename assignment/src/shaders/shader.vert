@@ -16,16 +16,33 @@ void main(void) {
   vec4 position_h = vec4(position,1);
   gl_Position = projection * view * model * position_h;
 
-  // Apply lighting effect
-  highp vec3 ambientLight = vec3(0.3, 0.3, 0.3);
-  highp vec3 directionalLightColor = vec3(1, 1, 1);
-  highp vec3 directionalVector = normalize(vec3(0.85, 1, 0.75));
+  if(colourMode == 1){
+    vec3 light_direction = normalize(light_direction4.xyz / light_direction4.w);
+	  mat4 model_view = view * model;
+	  mat3 normal_matrix = transpose(inverse(mat3(model)));
+	  vec3 normalised_normal = normalize(normal_matrix * normal);
+	  vec4 vertex_position = vec4(position, 1.0);
+	  vec4 diffuse_colour;
+	  vec4 position_h = vec4(position, 1.0);
+	  float diffuse_component = max(dot(normalised_normal, light_direction), 0.0f);
+	  diffuse_colour = vec4(1,1,1,1.0);
+	  vec4 ambient = diffuse_colour * 0.8f;
+	  vec4 diffuse_lighting = diffuse_component * diffuse_colour;
+	  lighting = (ambient + diffuse_lighting).xyz;
+  } else if(colourMode == 2) {
+    // Apply lighting effect
+    highp vec3 ambientLight = vec3(0.3, 0.3, 0.3);
+    highp vec3 directionalLightColor = vec3(1, 1, 1);
+    highp vec3 directionalVector = normalize(light_direction4.xyz);
 
-  highp vec4 transformedNormal = model * vec4(normal, 1.0);
+    highp vec4 transformedNormal = model * vec4(normal, 1.0);
 
-  highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
-  lighting = ambientLight + (directionalLightColor * directional);
+    highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+    lighting = ambientLight + (directionalLightColor * directional);
+  }
 }
+
+
 //     }
 // #version 300 es
 
