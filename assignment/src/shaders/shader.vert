@@ -19,14 +19,16 @@ void main(void) {
   if(colourMode == 1){
     vec3 light_direction = normalize(light_direction4.xyz / light_direction4.w);
 	  mat4 model_view = view * model;
+
 	  mat3 normal_matrix = transpose(inverse(mat3(model)));
 	  vec3 normalised_normal = normalize(normal_matrix * normal);
+
 	  vec4 vertex_position = vec4(position, 1.0);
 	  vec4 diffuse_colour;
 	  vec4 position_h = vec4(position, 1.0);
 	  float diffuse_component = max(dot(normalised_normal, light_direction), 0.0f);
-	  diffuse_colour = vec4(1,1,1,1.0);
-	  vec4 ambient = diffuse_colour * 0.8f;
+	  diffuse_colour = vec4(0.6, 0.6, 0.6, 1.0);
+	  vec4 ambient = diffuse_colour * 0.5f;
 	  vec4 diffuse_lighting = diffuse_component * diffuse_colour;
 	  lighting = (ambient + diffuse_lighting).xyz;
   } else if(colourMode == 2) {
