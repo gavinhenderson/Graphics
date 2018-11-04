@@ -30,8 +30,6 @@ class Floor {
     this.verts = new Float32Array(verts);
     this.normals = new Float32Array(normals);
     this.genColours(convertRGB(124, 252, 0));
-
-    console.log(this);
   }
 
   /**
