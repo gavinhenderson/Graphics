@@ -15,7 +15,7 @@ window.windfarm = new Windfarm();
 // 1: Diffuse
 // 2: Ambient
 window.colourMode = 1;
-let colourModes = ["Diffuse", "Direction"];
+let colourModes = ["Diffuse", "Ambient"];
 let colourModeElement = document.querySelector(".lighting-mode");
 
 main();
