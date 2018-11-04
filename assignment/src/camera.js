@@ -1,39 +1,27 @@
 import { mat4, vec3 } from "gl-matrix";
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
-// lookAt(out, eye, center, up)
-// out 	    mat4 	mat4 frustum matrix will be written into
-// eye 	    vec3 	Position of the viewer
-// center 	vec3 	Point the viewer is looking at
-// up 	    vec3 	vec3 pointing up
-
 class Camera {
   constructor() {
     this.radius = 10;
     this.increment = 0.5;
     this.angleIncrement = 3;
     this.angle = 25;
-
     this.y = 0;
     this.updateCoords();
   }
 
+  // Calculate the camera coords based on the angle and radius
   updateCoords() {
     let theta = Math.radians(this.angle);
     this.z = Math.cos(theta) * this.radius;
     this.x = Math.sin(theta) * this.radius;
   }
 
+  // Make sure the angle is within the bounds
   normaliseAngle() {
-    if (this.angle > 360) {
-      this.angle -= 360;
-      return;
-    }
-
-    if (this.angle < 0) {
-      this.angle += 360;
-      return;
-    }
+    this.angle = this.angle > 360 ? this.angle - 360 : this.angle;
+    this.angle = this.angle < 0 ? this.angle + 360 : this.angle;
   }
 
   moveRight() {
@@ -69,8 +57,6 @@ class Camera {
       vec3.fromValues(0, 0, 0),
       vec3.fromValues(0, 1, 0),
     );
-
-    // console.log(view);
 
     return view;
   }

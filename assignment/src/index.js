@@ -1,90 +1,29 @@
 import { importShader } from "./shaders";
-import { createProgram, getWebGLContext, Stack, convertRGB } from "./utils";
-import { mat4, vec3, vec4 } from "gl-matrix";
+import { createProgram, getWebGLContext, convertRGB } from "./utils";
+import { mat4, vec4 } from "gl-matrix";
 import Camera from "./camera";
 import Windfarm from "./windfarm";
 import { Floor } from "./shapes";
+import intialiseEventListeners from "./keyboard";
 
+// Adds a randians converter to the Math lib
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
+
+// Setup Global variables
 let rotation = 0;
 let camera = new Camera();
 let lightDirection = vec4.fromValues(1, 1, 1, 1);
-let rotSpeed = 1;
+window.rotSpeed = 1;
 window.windfarm = new Windfarm();
 
 // 1: Diffuse
 // 2: Ambient
 window.colourMode = 1;
-let colourModes = ["Diffuse", "Ambient"];
-let colourModeElement = document.querySelector(".lighting-mode");
 
+intialiseEventListeners(windfarm, camera);
 main();
 
-window.addEventListener(
-  "keydown",
-  function(e) {
-    // space and arrow keys
-    if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-      e.preventDefault();
-    }
-  },
-  false,
-);
-
-window.onkeyup = (event) => {
-  let key = event.key.toLowerCase();
-
-  switch (key) {
-    case "e": {
-      windfarm.addWindmill();
-      break;
-    }
-    case "r": {
-      windfarm.removeWindmill();
-      break;
-    }
-    case "t": {
-      colourMode++;
-      if (colourMode > 2) colourMode = 1;
-      colourModeElement.innerHTML = colourModes[colourMode - 1];
-    }
-  }
-};
-
-window.onkeydown = (event) => {
-  let { key } = event;
-  key = key.toLowerCase();
-
-  switch (key) {
-    case "arrowleft": {
-      camera.moveLeft();
-      break;
-    }
-    case "arrowright": {
-      camera.moveRight();
-      break;
-    }
-    case "arrowup": {
-      camera.moveIn();
-      break;
-    }
-    case "arrowdown": {
-      camera.moveOut();
-      break;
-    }
-    case "q": {
-      rotSpeed++;
-      break;
-    }
-    case "w": {
-      rotSpeed--;
-      break;
-    }
-  }
-};
-
 function main() {
-  /** @type {WebGLRenderingContext} */
   let gl = getWebGLContext();
 
   let vao = gl.createVertexArray();
@@ -93,7 +32,6 @@ function main() {
   const vertShader = importShader(gl.VERTEX_SHADER, gl);
   const fragShader = importShader(gl.FRAGMENT_SHADER, gl);
 
-  /** @type {WebGLProgram} */
   let shaderProgram = createProgram(gl, vertShader, fragShader);
 
   const programInfo = {
@@ -117,24 +55,17 @@ function main() {
   floor.initBuffers(gl);
   windfarm.initBuffers(gl);
 
+  // Setup the draw function loop
   let then = 0;
   function render(now) {
-    now *= 0.001; // convert to seconds
+    now *= 0.001;
     const deltaTime = now - then;
     then = now;
-
     drawScene(gl, programInfo, deltaTime);
-
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);
 
-  /**
-   *
-   * @param {WebGLRenderingContext} gl
-   * @param {*} programInfo
-   * @param {*} deltaTime
-   */
   function drawScene(gl, programInfo, deltaTime) {
     gl.clearColor(...convertRGB(30, 144, 255), 1.0);
     gl.clearDepth(1.0);
@@ -161,7 +92,6 @@ function main() {
     windfarm.draw(gl, programInfo, rotation);
 
     gl.useProgram(null);
-
     rotation += deltaTime * rotSpeed;
   }
 }
