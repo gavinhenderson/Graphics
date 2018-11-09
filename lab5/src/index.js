@@ -1,4 +1,6 @@
-import { importShader } from "./shaders";
+import { createShader, Context, Program } from "./engine";
+import vertSource from "./shader.vert";
+import fragSource from "./shader.frag";
 
 /* Array of vertex positions */
 const vertexPositions = new Float32Array([
@@ -19,46 +21,51 @@ const vertexPositions = new Float32Array([
 let program = null;
 let positionBufferObject = null;
 
-const gl = init();
+const context = init();
 
 setInterval(() => {
-  display(gl);
+  display(context.gl);
 }, 1000);
 
 function init() {
-  const canvas = document.querySelector("#glCanvas");
-  const gl = canvas.getContext("webgl2");
+  const context = new Context("glCanvas");
 
-  if (!gl) alert("Your browser doesnt support webgl2");
-
-  positionBufferObject = gl.createBuffer();
+  positionBufferObject = context.gl.createBuffer();
 
   /* Specify the current active buffer object by identifer */
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBufferObject);
+  context.gl.bindBuffer(context.gl.ARRAY_BUFFER, positionBufferObject);
 
   /* Allocates OpenGL memory for storing data or indices, any data
  	   previously defined is deleted*/
-  gl.bufferData(gl.ARRAY_BUFFER, vertexPositions, gl.DYNAMIC_DRAW);
+  context.gl.bufferData(
+    context.gl.ARRAY_BUFFER,
+    vertexPositions,
+    context.gl.DYNAMIC_DRAW,
+  );
 
-  /* Stop using buffer object for target (GL_ARRAY_BUFFER) because buffer name = 0*/
-  gl.bindBuffer(gl.ARRAY_BUFFER, null);
+  /* Stop using buffer object for target (context.gl_ARRAY_BUFFER) because buffer name = 0*/
+  context.gl.bindBuffer(context.gl.ARRAY_BUFFER, null);
 
   /* Build both shaders */
-  const vertShader = importShader(gl.VERTEX_SHADER, gl);
-  const fragShader = importShader(gl.FRAGMENT_SHADER, gl);
+  const vertShader = createShader(
+    context.gl,
+    context.gl.VERTEX_SHADER,
+    vertSource,
+  );
+  const fragShader = createShader(
+    context.gl,
+    context.gl.FRAGMENT_SHADER,
+    fragSource,
+  );
 
   /* Create a shader program object and link the vertex and fragment shaders
  	into a single shader program */
-  program = gl.createProgram();
-  gl.attachShader(program, vertShader);
-  gl.attachShader(program, fragShader);
-  gl.linkProgram(program);
+  program = new Program(context.gl);
+  program.attachShader(vertShader);
+  program.attachShader(fragShader);
+  program.linkProgram();
 
-  /* Output and shader compilation errors */
-  const programLog = gl.getProgramInfoLog(program);
-  if (programLog !== "") console.log(programLog);
-
-  return gl;
+  return context;
 }
 
 /**
@@ -74,7 +81,7 @@ function display(gl) {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   /* Set the current shader program to be used */
-  gl.useProgram(program);
+  gl.useProgram(program.program);
 
   /* Set the current active buffer object */
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBufferObject);
