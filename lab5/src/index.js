@@ -1,4 +1,4 @@
-import { createShader, Context, Program } from "./engine";
+import { createShader, Context, Program, Mesh } from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
 
@@ -20,6 +20,7 @@ const vertexPositions = new Float32Array([
 
 let program = null;
 let positionBufferObject = null;
+let triangleMesh = null;
 
 const context = init();
 
@@ -29,22 +30,8 @@ setInterval(() => {
 
 function init() {
   const context = new Context("glCanvas");
-
-  positionBufferObject = context.gl.createBuffer();
-
-  /* Specify the current active buffer object by identifer */
-  context.gl.bindBuffer(context.gl.ARRAY_BUFFER, positionBufferObject);
-
-  /* Allocates OpenGL memory for storing data or indices, any data
- 	   previously defined is deleted*/
-  context.gl.bufferData(
-    context.gl.ARRAY_BUFFER,
-    vertexPositions,
-    context.gl.DYNAMIC_DRAW,
-  );
-
-  /* Stop using buffer object for target (context.gl_ARRAY_BUFFER) because buffer name = 0*/
-  context.gl.bindBuffer(context.gl.ARRAY_BUFFER, null);
+  triangleMesh = new Mesh(context, { vertexPositions });
+  triangleMesh.initBuffers();
 
   /* Build both shaders */
   const vertShader = createShader(
@@ -74,7 +61,7 @@ function init() {
  */
 function display(gl) {
   /* Update the vertext buffer object with the modified array of vertices */
-  gl.bufferData(gl.ARRAY_BUFFER, vertexPositions, gl.DYNAMIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, triangleMesh.vertexPositions, gl.DYNAMIC_DRAW);
 
   /* Define the background colour*/
   gl.clearColor(1, 1, 1, 1);
@@ -84,7 +71,7 @@ function display(gl) {
   gl.useProgram(program.program);
 
   /* Set the current active buffer object */
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBufferObject);
+  gl.bindBuffer(gl.ARRAY_BUFFER, triangleMesh.positionBufferObject);
 
   /* Specifies where the dat values accociated with index can accessed in the vertex shader */
   gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
