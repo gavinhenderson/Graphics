@@ -1,11 +1,10 @@
 class Program {
   /**
-   * @param {WebGLRenderingContext} gl
    * @param {boolean} debug
    */
-  constructor(gl, debug = true) {
+  constructor(context, debug = true) {
     this.debug = debug;
-    this.gl = gl;
+    this.gl = context.gl;
     this.program = gl.createProgram();
     this.printProgramInfo();
   }

@@ -39,7 +39,7 @@ function main() {
 
   /* Create a shader program object and link the vertex and fragment shaders
  	into a single shader program */
-  const program = new Program(context.gl);
+  const program = new Program(context);
   program.attachShader(vertShader);
   program.attachShader(fragShader);
   program.linkProgram();
