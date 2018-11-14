@@ -23,6 +23,15 @@ class Program {
     this.gl.linkProgram(this.program);
     this.printProgramInfo();
   }
+
+  use() {
+    this.gl.useProgram(this.program);
+  }
+
+  stopUsing() {
+    this.gl.disableVertexAttribArray(0);
+    this.gl.useProgram(null);
+  }
 }
 
 export default Program;

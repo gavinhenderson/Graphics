@@ -62,12 +62,11 @@ function main() {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     /* Set the current shader program to be used */
-    gl.useProgram(program.program);
+    program.use();
 
     triangleMesh.draw();
 
     /* Disable vertex array and shader program */
-    gl.disableVertexAttribArray(0);
-    gl.useProgram(null);
+    program.stopUsing();
   }
 }
