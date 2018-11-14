@@ -5,7 +5,7 @@ class Program {
   constructor(context, debug = true) {
     this.debug = debug;
     this.gl = context.gl;
-    this.program = gl.createProgram();
+    this.program = this.gl.createProgram();
     this.printProgramInfo();
   }
 
