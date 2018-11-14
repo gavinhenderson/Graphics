@@ -28,7 +28,7 @@ function convert(obj) {
     );
   };
   var json = {
-    verts: [],
+    vertexPositions: [],
     normals: [],
     texcoords: [],
     indices: [],
@@ -92,7 +92,7 @@ function convert(obj) {
 
   for (var i = 0; i < f.length; i++) {
     json.indices.push(i);
-    json.verts.push(v[f[i].v][0], v[f[i].v][1], v[f[i].v][2]);
+    json.vertexPositions.push(v[f[i].v][0], v[f[i].v][1], v[f[i].v][2]);
     json.normals.push(vn[f[i].vn][0], vn[f[i].vn][1], vn[f[i].vn][2]);
     json.texcoords.push(vt[f[i].vt][0], 1.0 - vt[f[i].vt][1]);
   }

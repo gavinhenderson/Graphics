@@ -1,28 +1,15 @@
 import { createShader, Context, Program, Mesh } from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
+import firetruckRaw from "./firetruck.json";
 
-/* Array of vertex positions */
-const vertexPositions = new Float32Array([
-  0.75,
-  0.75,
-  0.0,
-  1.0,
-  0.75,
-  -0.75,
-  0.0,
-  1.0,
-  -0.75,
-  -0.75,
-  0.0,
-  1.0,
-]);
+console.log(firetruckRaw);
 
 main();
 
 function main() {
   const context = new Context("glCanvas");
-  const triangleMesh = new Mesh(context, { vertexPositions });
+  const triangleMesh = new Mesh(context, firetruckRaw);
   triangleMesh.initBuffers();
 
   /* Build both shaders */

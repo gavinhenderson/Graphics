@@ -1,7 +1,11 @@
 #version 300 es
+
 precision mediump float;
+in vec4 fcolour;
+in vec3 lighting;
 out vec4 outputColor;
+
 void main()
 {
-  outputColor = vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	outputColor = fcolour * vec4(lighting,1);
 }

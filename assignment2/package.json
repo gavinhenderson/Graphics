@@ -13,15 +13,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "css-loader": "^1.0.0",
     "express": "^4.16.3",
+    "gl-matrix": "^2.8.1",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "json-loader": "^0.5.7",
+    "json5-loader": "^1.0.1",
     "lodash": "^4.17.11",
+    "raw-loader": "^0.5.1",
     "style-loader": "^0.23.0",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.9",
-    "css-loader": "^1.0.0",
-    "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
-    "raw-loader": "^0.5.1"
+    "webpack-dev-server": "^3.1.9"
   }
 }
