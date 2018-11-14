@@ -7,6 +7,8 @@ class Program {
     this.gl = context.gl;
     this.program = this.gl.createProgram();
     this.printProgramInfo();
+    this.attribLocations = {};
+    this.uniformLocations = {};
   }
 
   printProgramInfo() {
@@ -31,6 +33,28 @@ class Program {
   stopUsing() {
     this.gl.disableVertexAttribArray(0);
     this.gl.useProgram(null);
+  }
+
+  addAttrib(attribName) {
+    this.attribLocations[attribName] = this.gl.getAttribLocation(
+      this.program,
+      attribName,
+    );
+  }
+
+  addUniform(uniformName) {
+    this.uniformLocations[uniformName] = this.gl.getUniformLocation(
+      this.program,
+      uniformName,
+    );
+  }
+
+  addMultipleAttribs(listOfAttribs) {
+    listOfAttribs.forEach((current) => this.addAttrib(current));
+  }
+
+  addMultipleUniforms(listOfUniforms) {
+    listOfUniforms.forEach((current) => this.addUniform(current));
   }
 }
 

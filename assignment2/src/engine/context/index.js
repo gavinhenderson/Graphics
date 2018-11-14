@@ -10,6 +10,11 @@ class Context {
 
     this.gl = gl;
   }
+
+  createVertexArray() {
+    this.vao = this.gl.createVertexArray();
+    this.gl.bindVertexArray(this.vao);
+  }
 }
 
 export default Context;

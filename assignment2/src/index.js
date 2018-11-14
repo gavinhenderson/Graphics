@@ -9,8 +9,10 @@ main();
 
 function main() {
   const context = new Context("glCanvas");
-  const triangleMesh = new Mesh(context, firetruckRaw);
-  triangleMesh.initBuffers();
+  context.createVertexArray();
+
+  const firetruckMesh = new Mesh(context, firetruckRaw);
+  firetruckMesh.initBuffers();
 
   /* Build both shaders */
   const vertShader = createShader(
@@ -24,12 +26,19 @@ function main() {
     fragSource,
   );
 
-  /* Create a shader program object and link the vertex and fragment shaders
- 	into a single shader program */
   const program = new Program(context);
   program.attachShader(vertShader);
   program.attachShader(fragShader);
   program.linkProgram();
+
+  program.addMultipleAttribs(["position", "normal"]);
+  program.addMultipleUniforms([
+    "projection",
+    "model",
+    "view",
+    "light_direction4",
+    "colourMode",
+  ]);
 
   let then = 0;
   function render(now) {
@@ -51,7 +60,7 @@ function main() {
     /* Set the current shader program to be used */
     program.use();
 
-    triangleMesh.draw();
+    firetruckMesh.draw();
 
     /* Disable vertex array and shader program */
     program.stopUsing();
