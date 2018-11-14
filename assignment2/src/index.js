@@ -1,9 +1,10 @@
 import { createShader, Context, Program, Mesh } from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
-import firetruckRaw from "./firetruck.json";
+import astronautRaw from "./astronaut.json";
+import { mat4, vec3, vec4 } from "gl-matrix";
 
-console.log(firetruckRaw);
+Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
 main();
 
@@ -11,8 +12,8 @@ function main() {
   const context = new Context("glCanvas");
   context.createVertexArray();
 
-  const firetruckMesh = new Mesh(context, firetruckRaw);
-  firetruckMesh.initBuffers();
+  const astronautMesh = new Mesh(context, astronautRaw);
+  astronautMesh.initBuffers();
 
   /* Build both shaders */
   const vertShader = createShader(
@@ -53,16 +54,43 @@ function main() {
   function display(deltaTime) {
     const { gl } = context;
 
-    /* Define the background colour*/
-    gl.clearColor(1, 1, 1, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    /* Set the current shader program to be used */
+    gl.clearColor(0, 1, 0, 1);
+    gl.clearDepth(1.0);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     program.use();
 
-    firetruckMesh.draw();
+    // Projection Matrix
+    const aspectRatio = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    const projection = mat4.create();
+    mat4.perspective(projection, Math.radians(30), aspectRatio, 0.1, 100);
 
-    /* Disable vertex array and shader program */
+    // View Matrix
+    const view = mat4.create();
+    mat4.lookAt(
+      view,
+      vec3.fromValues(0, 0, 10),
+      vec3.fromValues(0, 0, 0),
+      vec3.fromValues(0, 1, 0),
+    );
+
+    const model = mat4.create();
+    mat4.translate(model, model, [0, -2, 0]);
+    mat4.scale(model, model, vec3.fromValues(100, 0, 100));
+
+    // Load Uniforms
+    gl.uniformMatrix4fv(program.uniformLocations.projection, false, projection);
+    gl.uniformMatrix4fv(program.uniformLocations.view, false, view);
+    gl.uniform4fv(
+      program.uniformLocations.light_direction4,
+      vec4.fromValues(1, 1, 1, 1),
+    );
+    gl.uniform1i(program.uniformLocations.colourMode, 1);
+    gl.uniformMatrix4fv(program.uniformLocations.model, false, model);
+
+    astronautMesh.draw(program);
+
     program.stopUsing();
   }
 }

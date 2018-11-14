@@ -31,7 +31,6 @@ class Program {
   }
 
   stopUsing() {
-    this.gl.disableVertexAttribArray(0);
     this.gl.useProgram(null);
   }
 
