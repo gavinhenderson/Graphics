@@ -16,6 +16,9 @@ class Camera {
     let theta = Math.radians(this.angle);
     this.z = Math.cos(theta) * this.radius;
     this.x = Math.sin(theta) * this.radius;
+
+    console.log(this.x);
+    console.log(this.z);
   }
 
   // Make sure the angle is within the bounds

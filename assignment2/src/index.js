@@ -6,6 +6,30 @@ import { mat4, vec3, vec4 } from "gl-matrix";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
+const square = {
+  vertexPositions: [
+    -0.25,
+    0.25,
+    -0.25,
+    0.25,
+    0.25,
+    -0.25,
+    0.25,
+    0.25,
+    0.25,
+    0.25,
+    0.25,
+    0.25,
+    -0.25,
+    0.25,
+    0.25,
+    -0.25,
+    0.25,
+    -0.25,
+  ],
+  normals: [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+};
+
 main();
 
 function main() {
@@ -14,6 +38,9 @@ function main() {
 
   const astronautMesh = new Mesh(context, astronautRaw);
   astronautMesh.initBuffers();
+
+  // const squareMesh = new Mesh(context, square);
+  // squareMesh.initBuffers();
 
   /* Build both shaders */
   const vertShader = createShader(
@@ -54,11 +81,12 @@ function main() {
   function display(deltaTime) {
     const { gl } = context;
 
-    gl.clearColor(0, 1, 0, 1);
+    gl.clearColor(0, 0, 0, 1);
     gl.clearDepth(1.0);
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LEQUAL);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
     program.use();
 
     // Projection Matrix
@@ -70,10 +98,14 @@ function main() {
     const view = mat4.create();
     mat4.lookAt(
       view,
-      vec3.fromValues(0, 0, 10),
+      vec3.fromValues(5, 0, 10),
       vec3.fromValues(0, 0, 0),
       vec3.fromValues(0, 1, 0),
     );
+
+    // const model = mat4.create();
+    // mat4.translate(model, model, [0, 0, 0]);
+    // mat4.scale(model, model, vec3.fromValues(0.01, 0.01, 0.01));
 
     const model = mat4.create();
     mat4.translate(model, model, [0, -2, 0]);
@@ -90,7 +122,9 @@ function main() {
     gl.uniformMatrix4fv(program.uniformLocations.model, false, model);
 
     astronautMesh.draw(program);
+    // squareMesh.draw(program);
 
+    gl.disableVertexAttribArray(0);
     program.stopUsing();
   }
 }
