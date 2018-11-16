@@ -1,10 +1,9 @@
-import { createShader, Context, Program, Mesh, Camera } from "./engine";
+import { createShader, Context, Program, TexturedMesh, Camera } from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
 import astronautRaw from "./astronaut.json";
 import { mat4, vec4 } from "gl-matrix";
 import astronautTexture from "./astronaut.png";
-import { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } from "constants";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
@@ -14,25 +13,12 @@ function main() {
   const context = new Context("glCanvas");
   context.createVertexArray();
 
-  let texture = context.gl.createTexture();
-  context.gl.bindTexture(context.gl.TEXTURE_2D, texture);
-  let image = new Image();
-  image.onload = () => {
-    context.gl.bindTexture(context.gl.TEXTURE_2D, texture);
-    context.gl.texImage2D(
-      context.gl.TEXTURE_2D,
-      0,
-      context.gl.RGBA,
-      context.gl.RGBA,
-      context.gl.UNSIGNED_BYTE,
-      image,
-    );
-    context.gl.generateMipmap(context.gl.TEXTURE_2D);
-  };
+  const astronautMesh = new TexturedMesh(
+    context,
+    astronautRaw,
+    astronautTexture,
+  );
 
-  image.src = astronautTexture;
-
-  const astronautMesh = new Mesh(context, astronautRaw);
   astronautMesh.initBuffers();
 
   const camera = new Camera();
