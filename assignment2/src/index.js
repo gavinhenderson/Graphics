@@ -1,34 +1,10 @@
-import { createShader, Context, Program, Mesh } from "./engine";
+import { createShader, Context, Program, Mesh, Camera } from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
 import astronautRaw from "./astronaut.json";
 import { mat4, vec3, vec4 } from "gl-matrix";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
-
-const square = {
-  vertexPositions: [
-    -0.25,
-    0.25,
-    -0.25,
-    0.25,
-    0.25,
-    -0.25,
-    0.25,
-    0.25,
-    0.25,
-    0.25,
-    0.25,
-    0.25,
-    -0.25,
-    0.25,
-    0.25,
-    -0.25,
-    0.25,
-    -0.25,
-  ],
-  normals: [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-};
 
 main();
 
@@ -39,8 +15,7 @@ function main() {
   const astronautMesh = new Mesh(context, astronautRaw);
   astronautMesh.initBuffers();
 
-  // const squareMesh = new Mesh(context, square);
-  // squareMesh.initBuffers();
+  const camera = new Camera();
 
   /* Build both shaders */
   const vertShader = createShader(
@@ -54,10 +29,7 @@ function main() {
     fragSource,
   );
 
-  const program = new Program(context);
-  program.attachShader(vertShader);
-  program.attachShader(fragShader);
-  program.linkProgram();
+  const program = new Program(context, { vertShader, fragShader });
 
   program.addMultipleAttribs(["position", "normal"]);
   program.addMultipleUniforms([
@@ -95,21 +67,10 @@ function main() {
     mat4.perspective(projection, Math.radians(30), aspectRatio, 0.1, 100);
 
     // View Matrix
-    const view = mat4.create();
-    mat4.lookAt(
-      view,
-      vec3.fromValues(5, 0, 10),
-      vec3.fromValues(0, 0, 0),
-      vec3.fromValues(0, 1, 0),
-    );
-
-    // const model = mat4.create();
-    // mat4.translate(model, model, [0, 0, 0]);
-    // mat4.scale(model, model, vec3.fromValues(0.01, 0.01, 0.01));
+    const view = camera.getView();
 
     const model = mat4.create();
-    mat4.translate(model, model, [0, 0, 0]);
-    // mat4.scale(model, model, vec3.fromValues(100, 0, 100));
+    mat4.translate(model, model, [0, -2, 0]);
 
     // Load Uniforms
     gl.uniformMatrix4fv(program.uniformLocations.projection, false, projection);

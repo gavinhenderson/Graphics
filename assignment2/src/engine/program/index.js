@@ -2,13 +2,17 @@ class Program {
   /**
    * @param {boolean} debug
    */
-  constructor(context, debug = true) {
+  constructor(context, shaderSource, debug = true) {
     this.debug = debug;
     this.gl = context.gl;
     this.program = this.gl.createProgram();
     this.printProgramInfo();
     this.attribLocations = {};
     this.uniformLocations = {};
+
+    this.attachShader(shaderSource.vertShader);
+    this.attachShader(shaderSource.fragShader);
+    this.linkProgram();
   }
 
   printProgramInfo() {

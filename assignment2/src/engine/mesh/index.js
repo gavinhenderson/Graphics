@@ -3,6 +3,7 @@ class Mesh {
     this.gl = context.gl;
     this.vertexPositions = new Float32Array(meshObj.vertexPositions);
     this.normals = new Float32Array(meshObj.normals);
+    this.texcoords = new Float32Array(meshObj.texcoords);
     this.indicies = meshObj.indices;
   }
 
