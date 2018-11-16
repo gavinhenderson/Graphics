@@ -2,7 +2,9 @@ import { createShader, Context, Program, Mesh, Camera } from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
 import astronautRaw from "./astronaut.json";
-import { mat4, vec3, vec4 } from "gl-matrix";
+import { mat4, vec4 } from "gl-matrix";
+import astronautTexture from "./astronaut.png";
+import { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } from "constants";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
@@ -11,6 +13,24 @@ main();
 function main() {
   const context = new Context("glCanvas");
   context.createVertexArray();
+
+  let texture = context.gl.createTexture();
+  context.gl.bindTexture(context.gl.TEXTURE_2D, texture);
+  let image = new Image();
+  image.onload = () => {
+    context.gl.bindTexture(context.gl.TEXTURE_2D, texture);
+    context.gl.texImage2D(
+      context.gl.TEXTURE_2D,
+      0,
+      context.gl.RGBA,
+      context.gl.RGBA,
+      context.gl.UNSIGNED_BYTE,
+      image,
+    );
+    context.gl.generateMipmap(context.gl.TEXTURE_2D);
+  };
+
+  image.src = astronautTexture;
 
   const astronautMesh = new Mesh(context, astronautRaw);
   astronautMesh.initBuffers();
@@ -31,7 +51,7 @@ function main() {
 
   const program = new Program(context, { vertShader, fragShader });
 
-  program.addMultipleAttribs(["position", "normal"]);
+  program.addMultipleAttribs(["position", "normal", "texcoord"]);
   program.addMultipleUniforms([
     "projection",
     "model",
@@ -82,8 +102,9 @@ function main() {
     gl.uniform1i(program.uniformLocations.colourMode, 1);
     gl.uniformMatrix4fv(program.uniformLocations.model, false, model);
 
+    // console.log(program.attribLocations);
+
     astronautMesh.draw(program);
-    // squareMesh.draw(program);
 
     gl.disableVertexAttribArray(0);
     program.stopUsing();

@@ -2,6 +2,7 @@
 
 layout(location = 1) in vec3 position;
 layout(location = 2) in vec3 normal;
+layout(location = 3) in vec2 texcoord;
 
 uniform mat4 model, view, projection;
 uniform vec4 light_direction4;
@@ -9,8 +10,11 @@ uniform int colourMode;
 
 out vec3 lighting;
 out vec4 fcolour;
+out vec2 ftexcoord;
 
 void main(void) {
+  ftexcoord = texcoord;
+
   fcolour = vec4(1,0,0,1);
   vec4 position_h = vec4(position,1);
   gl_Position = projection * view * model * position_h;

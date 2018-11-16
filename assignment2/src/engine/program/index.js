@@ -43,6 +43,12 @@ class Program {
       this.program,
       attribName,
     );
+
+    if (this.attribLocations[attribName] === -1) {
+      console.warn(
+        `The ${attribName.toUpperCase()} attribute could not be found`,
+      );
+    }
   }
 
   addUniform(uniformName) {
@@ -50,6 +56,12 @@ class Program {
       this.program,
       uniformName,
     );
+
+    if (this.uniformLocations[uniformName] === -1) {
+      console.warn(
+        `The ${uniformName.toUpperCase()} uniform could not be found`,
+      );
+    }
   }
 
   addMultipleAttribs(listOfAttribs) {
