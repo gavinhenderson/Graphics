@@ -1,8 +1,8 @@
 class Mesh {
   constructor(context, meshObj) {
     this.gl = context.gl;
-    this.vertexPositions = meshObj.vertexPositions;
-    this.normals = meshObj.normals;
+    this.vertexPositions = new Float32Array(meshObj.vertexPositions);
+    this.normals = new Float32Array(meshObj.normals);
     this.indicies = meshObj.indices;
   }
 
@@ -35,7 +35,7 @@ class Mesh {
     gl.enableVertexAttribArray(attribLocations.normal);
     gl.vertexAttribPointer(attribLocations.normal, 3, gl.FLOAT, false, 0, 0);
 
-    gl.drawArrays(gl.TRIANGLES, 0, indicies);
+    gl.drawArrays(gl.TRIANGLES, 0, indicies.length);
   }
 }
 

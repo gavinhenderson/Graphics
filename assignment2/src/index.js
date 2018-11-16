@@ -108,8 +108,8 @@ function main() {
     // mat4.scale(model, model, vec3.fromValues(0.01, 0.01, 0.01));
 
     const model = mat4.create();
-    mat4.translate(model, model, [0, -2, 0]);
-    mat4.scale(model, model, vec3.fromValues(100, 0, 100));
+    mat4.translate(model, model, [0, 0, 0]);
+    // mat4.scale(model, model, vec3.fromValues(100, 0, 100));
 
     // Load Uniforms
     gl.uniformMatrix4fv(program.uniformLocations.projection, false, projection);
