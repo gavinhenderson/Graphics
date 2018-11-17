@@ -1,4 +1,11 @@
-import { createShader, Context, Program, TexturedMesh, Camera } from "./engine";
+import {
+  createShader,
+  Context,
+  Program,
+  TexturedMesh,
+  Camera,
+  Scene,
+} from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
 import astronautRaw from "./astronaut.json";
@@ -46,6 +53,8 @@ function main() {
     "colourMode",
   ]);
 
+  const scene = new Scene(context);
+
   let then = 0;
   function render(now) {
     now *= 0.001;
@@ -59,12 +68,7 @@ function main() {
   function display(deltaTime) {
     const { gl } = context;
 
-    gl.clearColor(0, 0, 0, 1);
-    gl.clearDepth(1.0);
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LEQUAL);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+    scene.preDraw();
     program.use();
 
     // Projection Matrix
@@ -87,8 +91,6 @@ function main() {
     );
     gl.uniform1i(program.uniformLocations.colourMode, 1);
     gl.uniformMatrix4fv(program.uniformLocations.model, false, model);
-
-    // console.log(program.attribLocations);
 
     astronautMesh.draw(program);
 
