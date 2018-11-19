@@ -5,6 +5,7 @@ import {
   TexturedMesh,
   Camera,
   Scene,
+  UserControl,
 } from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
@@ -17,6 +18,17 @@ Math.radians = (degrees) => (Math.PI * degrees) / 180;
 main();
 
 function main() {
+  const userControl = new UserControl();
+  let counter = 0;
+  userControl.addKeyDownListener("a", () => {
+    console.log(counter);
+    counter++;
+  });
+
+  userControl.addKeyUpListener("l", () => {
+    console.log("test");
+  });
+
   const context = new Context("glCanvas");
   context.createVertexArray();
 
@@ -51,6 +63,7 @@ function main() {
     "view",
     "light_direction4",
     "colourMode",
+    "point_light_pos",
   ]);
 
   const scene = new Scene(context);
