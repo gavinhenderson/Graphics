@@ -8,8 +8,11 @@ uniform mat4 projection, model, view;
 
 out vec3 normalInterp;
 out vec3 vertPos;
+out vec2 ftexcoord;
 
 void main(){
+    ftexcoord = texcoord;
+
     mat4 normalMat = transpose(inverse(model));
 
     mat4 modelview = model * view;

@@ -21,7 +21,7 @@ main();
 
 function main() {
   const userControl = new UserControl();
-  // userControl.debug = true;
+  userControl.debug = true;
 
   const context = new Context("glCanvas");
   context.createVertexArray();
