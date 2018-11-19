@@ -7,7 +7,6 @@ layout(location = 3) in vec2 texcoord;
 uniform mat4 model, view, projection;
 uniform vec4 light_direction4;
 uniform vec4 point_light_pos;
-uniform int colourMode;
 
 out vec3 lighting;
 out vec4 fcolour;

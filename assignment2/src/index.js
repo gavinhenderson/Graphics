@@ -2,6 +2,7 @@ import {
   createShader,
   Context,
   Program,
+  Mesh,
   TexturedMesh,
   Camera,
   Scene,
@@ -10,8 +11,9 @@ import {
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
 import astronautRaw from "./astronaut.json";
-import { mat4, vec4 } from "gl-matrix";
+import { mat4, vec4, vec3 } from "gl-matrix";
 import astronautTexture from "./astronaut.png";
+import sphereRaw from "./sphere.json";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
@@ -19,25 +21,26 @@ main();
 
 function main() {
   const userControl = new UserControl();
-  let counter = 0;
-  userControl.addKeyDownListener("a", () => {
-    console.log(counter);
-    counter++;
-  });
-
-  userControl.addKeyUpListener("l", () => {
-    console.log("test");
-  });
 
   const context = new Context("glCanvas");
   context.createVertexArray();
+
+  const sphereModel = mat4.create();
+  mat4.translate(sphereModel, sphereModel, [0, -2, 0]);
+  mat4.scale(sphereModel, sphereModel, vec3.fromValues(0.1, 0.1, 0.1));
+  const sphereMesh = new Mesh(context, sphereRaw);
+
+  userControl.addKeyDownListener("downarrow", (event) => {
+    console.log("trig");
+  });
+
+  sphereMesh.initBuffers();
 
   const astronautMesh = new TexturedMesh(
     context,
     astronautRaw,
     astronautTexture,
   );
-
   astronautMesh.initBuffers();
 
   const camera = new Camera();
@@ -106,6 +109,11 @@ function main() {
     gl.uniformMatrix4fv(program.uniformLocations.model, false, model);
 
     astronautMesh.draw(program);
+
+    gl.uniform1i(program.uniformLocations.colourMode, 2);
+    gl.uniformMatrix4fv(program.uniformLocations.model, false, sphereModel);
+
+    sphereMesh.draw(program);
 
     gl.disableVertexAttribArray(0);
     program.stopUsing();

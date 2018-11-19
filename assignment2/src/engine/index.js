@@ -6,6 +6,7 @@ import Camera from "./camera";
 import TexturedMesh from "./textured-mesh";
 import Scene from "./scene";
 import UserControl from "./user-control";
+import PointLight from "./point-light";
 
 export {
   createShader,
@@ -16,4 +17,5 @@ export {
   TexturedMesh,
   Scene,
   UserControl,
+  PointLight,
 };
