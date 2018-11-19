@@ -4,27 +4,6 @@ layout(location = 1) in vec3 position;
 layout(location = 2) in vec3 normal;
 layout(location = 3) in vec2 texcoord;
 
-uniform mat4 projection, model, view;
-
-out vec3 normalInterp;
-out vec3 vertPos;
-
-void main(){
-    mat4 normalMat = transpose(inverse(model));
-
-    mat4 modelview = model * view;
-
-    gl_Position = projection * modelview * vec4(position, 1.0);
-    vec4 vertPos4 = modelview * vec4(position, 1.0);
-    vertPos = vec3(vertPos4) / vertPos4.w;
-    normalInterp = vec3(normalMat * vec4(normal, 0.0));
-}
-
-/*
-layout(location = 1) in vec3 position;
-layout(location = 2) in vec3 normal;
-layout(location = 3) in vec2 texcoord;
-
 uniform mat4 model, view, projection;
 uniform vec4 light_direction4;
 uniform vec3 point_light_pos;
@@ -55,4 +34,3 @@ void main(void) {
   lighting = (ambient + diffuse_lighting).xyz;
 
 }
-*/

@@ -128,6 +128,11 @@ function main() {
 
     sphereMesh.draw(program);
 
+    const point_light_pos = vec3.create();
+    mat4.getTranslation(point_light_pos, sphereModel);
+
+    gl.uniform3fv(program.uniformLocations.point_light_pos, point_light_pos);
+
     gl.disableVertexAttribArray(0);
     program.stopUsing();
   }
