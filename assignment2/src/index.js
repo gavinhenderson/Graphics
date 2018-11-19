@@ -21,17 +21,30 @@ main();
 
 function main() {
   const userControl = new UserControl();
+  // userControl.debug = true;
 
   const context = new Context("glCanvas");
   context.createVertexArray();
 
   const sphereModel = mat4.create();
-  mat4.translate(sphereModel, sphereModel, [0, -2, 0]);
+  mat4.translate(sphereModel, sphereModel, [0, 0, 3]);
   mat4.scale(sphereModel, sphereModel, vec3.fromValues(0.1, 0.1, 0.1));
   const sphereMesh = new Mesh(context, sphereRaw);
 
-  userControl.addKeyDownListener("downarrow", (event) => {
-    console.log("trig");
+  userControl.addKeyDownListener("arrowdown", (event) => {
+    mat4.translate(sphereModel, sphereModel, vec3.fromValues(0, 0, 1));
+  });
+
+  userControl.addKeyDownListener("arrowup", (event) => {
+    mat4.translate(sphereModel, sphereModel, vec3.fromValues(0, 0, -1));
+  });
+
+  userControl.addKeyDownListener("arrowleft", (event) => {
+    mat4.translate(sphereModel, sphereModel, vec3.fromValues(-1, 0, 0));
+  });
+
+  userControl.addKeyDownListener("arrowright", (event) => {
+    mat4.translate(sphereModel, sphereModel, vec3.fromValues(1, 0, 0));
   });
 
   sphereMesh.initBuffers();

@@ -4,12 +4,16 @@ class UserControl {
     this.onKeyUpActions = {};
 
     window.onkeydown = (event) => {
+      if (this.debug) console.log(event.key);
+
       const key = event.key.toLowerCase();
       const action = this.onKeyDownActions[key];
       if (action) action(event);
     };
 
     window.onkeyup = (event) => {
+      if (this.debug) console.log(event.key);
+
       const key = event.key.toLowerCase();
       const action = this.onKeyUpActions[key];
       if (action) action(event);
