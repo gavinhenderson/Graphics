@@ -15,7 +15,7 @@ void main(){
 
     mat4 normalMat = transpose(inverse(model));
 
-    mat4 modelview = model * view;
+    mat4 modelview = view * model;
 
     gl_Position = projection * modelview * vec4(position, 1.0);
     vec4 vertPos4 = modelview * vec4(position, 1.0);

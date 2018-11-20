@@ -13,7 +13,7 @@ uniform int mode;
 const vec3 lightPos = vec3(1.0,1.0,1.0);
 const vec3 lightColor = vec3(1.0, 1.0, 1.0);
 const float lightPower = 40.0;
-// const vec3 ambientColor = vec3(0.1, 0.0, 0.0);
+const vec3 ambientColor = vec3(0.1, 0.0, 0.0);
 const vec3 diffuseColor = vec3(0.5, 0.0, 0.0);
 const vec3 specColor = vec3(1.0, 1.0, 1.0);
 const float shininess = 16.0;
@@ -28,8 +28,9 @@ void main()
   if(colourMode == 1) {
     ambientColor = texture(texSampler, ftexcoord).xyz;
   } else {
-    ambientColor = vec3(.5,.5,.5);
+    ambientColor = vec3(1,1,1);
   }
+
   vec3 normal = normalize(normalInterp);
   vec3 lightDir = lightPos - vertPos;
   float distance = length(lightDir);

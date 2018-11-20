@@ -21,13 +21,13 @@ main();
 
 function main() {
   const userControl = new UserControl();
-  userControl.debug = true;
+  //userControl.debug = true;
 
   const context = new Context("glCanvas");
   context.createVertexArray();
 
   const sphereModel = mat4.create();
-  mat4.translate(sphereModel, sphereModel, [0, 0, 3]);
+  mat4.translate(sphereModel, sphereModel, [2, 0, 0]);
   mat4.scale(sphereModel, sphereModel, vec3.fromValues(0.1, 0.1, 0.1));
   const sphereMesh = new Mesh(context, sphereRaw);
 
