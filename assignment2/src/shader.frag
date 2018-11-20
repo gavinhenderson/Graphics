@@ -14,8 +14,7 @@ uniform vec3 lightPos;
 // const vec3 lightPos = vec3(0,1.0,0);
 const vec3 lightColor = vec3(1.0, 1.0, 1.0);
 const float lightPower = 40.0;
-///const vec3 ambientColor = vec3(0.1, 0.0, 0.0);
-const vec3 diffuseColor = vec3(0.5, 0.0, 0.0);
+const vec3 diffuseColor = vec3(0.1, 0.1, 0.1);
 const vec3 specColor = vec3(1.0, 1.0, 1.0);
 const float shininess = 16.0;
 const float screenGamma = 2.2;
@@ -67,27 +66,3 @@ void main()
   // use the gamma corrected color in the fragment
   fragColor = vec4(colorGammaCorrected, 1.0);
 }
-
-
-/*
-in vec4 fcolour;
-in vec3 lighting;
-in vec2 ftexcoord;
-
-out vec4 outputColor;
-
-uniform int colourMode;
-uniform sampler2D texSampler;
-
-void main()
-{
-  vec4 colour;
-  if(colourMode == 1) {
-    colour = texture(texSampler, ftexcoord);
-  } else {
-    colour = vec4(1,1,1,1);
-  }
-
-	outputColor = colour * vec4(lighting,1);
-}
-*/
