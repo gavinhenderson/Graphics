@@ -9,15 +9,16 @@ in vec2 ftexcoord;
 out vec4 fragColor;
 
 uniform int mode;
+uniform vec3 lightPos;
 
-const vec3 lightPos = vec3(1.0,1.0,1.0);
+// const vec3 lightPos = vec3(0,1.0,0);
 const vec3 lightColor = vec3(1.0, 1.0, 1.0);
 const float lightPower = 40.0;
-const vec3 ambientColor = vec3(0.1, 0.0, 0.0);
+///const vec3 ambientColor = vec3(0.1, 0.0, 0.0);
 const vec3 diffuseColor = vec3(0.5, 0.0, 0.0);
 const vec3 specColor = vec3(1.0, 1.0, 1.0);
 const float shininess = 16.0;
-const float screenGamma = 2.2; // Assume the monitor is calibrated to the sRGB color space
+const float screenGamma = 2.2;
 
 uniform int colourMode;
 uniform sampler2D texSampler;
@@ -28,7 +29,7 @@ void main()
   if(colourMode == 1) {
     ambientColor = texture(texSampler, ftexcoord).xyz;
   } else {
-    ambientColor = vec3(1,1,1);
+    ambientColor = vec3(0.1, 0.0, 0.0);
   }
 
   vec3 normal = normalize(normalInterp);
@@ -41,7 +42,6 @@ void main()
   float specular = 0.0;
 
   if(lambertian > 0.0) {
-
     vec3 viewDir = normalize(-vertPos);
 
     // this is blinn phong
@@ -57,6 +57,7 @@ void main()
       specular = pow(specAngle, shininess/4.0);
     }
   }
+
   vec3 colorLinear = ambientColor +
                      diffuseColor * lambertian * lightColor * lightPower / distance +
                      specColor * specular * lightColor * lightPower / distance;

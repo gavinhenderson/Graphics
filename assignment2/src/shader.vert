@@ -13,14 +13,12 @@ out vec2 ftexcoord;
 void main(){
     ftexcoord = texcoord;
 
-    mat4 normalMat = transpose(inverse(model));
-
     mat4 modelview = view * model;
 
     gl_Position = projection * modelview * vec4(position, 1.0);
     vec4 vertPos4 = modelview * vec4(position, 1.0);
     vertPos = vec3(vertPos4) / vertPos4.w;
-    normalInterp = vec3(normalMat * vec4(normal, 0.0));
+    normalInterp = normal;
 }
 
 /*

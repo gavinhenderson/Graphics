@@ -28,7 +28,7 @@ function main() {
 
   const sphereModel = mat4.create();
   mat4.translate(sphereModel, sphereModel, [2, 0, 0]);
-  mat4.scale(sphereModel, sphereModel, vec3.fromValues(0.1, 0.1, 0.1));
+  // mat4.scale(sphereModel, sphereModel, vec3.fromValues(0.1, 0.1, 0.1));
   const sphereMesh = new Mesh(context, sphereRaw);
 
   userControl.addKeyDownListener("arrowdown", (event) => {
@@ -57,6 +57,7 @@ function main() {
   astronautMesh.initBuffers();
 
   const camera = new Camera();
+  camera.setCameraControls(userControl);
 
   /* Build both shaders */
   const vertShader = createShader(
@@ -79,7 +80,7 @@ function main() {
     "view",
     "light_direction4",
     "colourMode",
-    "point_light_pos",
+    "lightPos",
   ]);
 
   const scene = new Scene(context);
@@ -130,8 +131,9 @@ function main() {
 
     const point_light_pos = vec3.create();
     mat4.getTranslation(point_light_pos, sphereModel);
+    console.log(point_light_pos);
 
-    gl.uniform3fv(program.uniformLocations.point_light_pos, point_light_pos);
+    gl.uniform3fv(program.uniformLocations.lightPos, point_light_pos);
 
     gl.disableVertexAttribArray(0);
     program.stopUsing();
