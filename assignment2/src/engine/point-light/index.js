@@ -1,11 +1,16 @@
 class PointLight {
-  constructor(mesh, startingPos) {
+  constructor(mesh, context) {
+    this.gl = context.gl;
     this.mesh = mesh;
-    this.currentPos = startingPos;
   }
 
-  draw() {
-    this.mesh.draw();
+  draw(program) {
+    this.gl.uniform3fv(
+      program.uniformLocations.lightPos,
+      this.mesh.getLocation(),
+    );
+
+    this.mesh.draw(program);
   }
 }
 

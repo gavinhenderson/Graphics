@@ -7,11 +7,11 @@ import {
   Camera,
   Scene,
   UserControl,
+  PointLight,
 } from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
 import astronautRaw from "./astronaut.json";
-import { mat4, vec4, vec3 } from "gl-matrix";
 import astronautTexture from "./astronaut.png";
 import sphereRaw from "./sphere.json";
 
@@ -19,7 +19,6 @@ main();
 
 function main() {
   const userControl = new UserControl();
-  //userControl.debug = true;
 
   const context = new Context("glCanvas");
   context.createVertexArray();
@@ -45,6 +44,7 @@ function main() {
   });
 
   sphereMesh.initBuffers();
+  const pointLight = new PointLight(sphereMesh, context);
 
   const astronautMesh = new TexturedMesh(
     context,
@@ -102,9 +102,7 @@ function main() {
     scene.draw(program);
     camera.draw(program);
     astronautMesh.draw(program);
-    sphereMesh.draw(program);
-
-    gl.uniform3fv(program.uniformLocations.lightPos, sphereMesh.getLocation());
+    pointLight.draw(program);
 
     gl.disableVertexAttribArray(0);
     program.stopUsing();
