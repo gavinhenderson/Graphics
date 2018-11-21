@@ -132,6 +132,8 @@ function main() {
     const point_light_pos = vec3.create();
     mat4.getTranslation(point_light_pos, sphereModel);
 
+    // console.log(mat4.getTranslation);
+    // console.log(point_light_pos);
     // console.log(point_light_pos);
 
     gl.uniform3fv(program.uniformLocations.lightPos, point_light_pos);
