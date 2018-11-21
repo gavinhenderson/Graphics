@@ -4,6 +4,7 @@ class TexturedMesh extends Mesh {
   constructor(context, meshObj, textureImg) {
     super(context, meshObj);
 
+    this.colourMode = 1;
     const { gl } = context;
 
     let texture = gl.createTexture();

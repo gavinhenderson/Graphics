@@ -15,8 +15,6 @@ import { mat4, vec4, vec3 } from "gl-matrix";
 import astronautTexture from "./astronaut.png";
 import sphereRaw from "./sphere.json";
 
-Math.radians = (degrees) => (Math.PI * degrees) / 180;
-
 main();
 
 function main() {
@@ -26,27 +24,24 @@ function main() {
   const context = new Context("glCanvas");
   context.createVertexArray();
 
-  const sphereModel = mat4.create();
-  // mat4.translate(sphereModel, sphereModel, [2, 0, 0]);
-  // mat4.scale(sphereModel, sphereModel, vec3.fromValues(0.1, 0.1, 0.1));
   const sphereMesh = new Mesh(context, sphereRaw);
   sphereMesh.setLocation([2, 0, 0]);
   sphereMesh.setScale(0.1);
 
   userControl.addKeyDownListener("arrowdown", (event) => {
-    sphereMesh.z++;
+    sphereMesh.z += 0.1;
   });
 
   userControl.addKeyDownListener("arrowup", (event) => {
-    sphereMesh.z--;
+    sphereMesh.z -= 0.1;
   });
 
   userControl.addKeyDownListener("arrowleft", (event) => {
-    sphereMesh.x--;
+    sphereMesh.x -= 0.1;
   });
 
   userControl.addKeyDownListener("arrowright", (event) => {
-    sphereMesh.x++;
+    sphereMesh.x += 0.1;
   });
 
   sphereMesh.initBuffers();
@@ -59,7 +54,7 @@ function main() {
   astronautMesh.initBuffers();
   astronautMesh.setLocation([0, -2, 0]);
 
-  const camera = new Camera();
+  const camera = new Camera(context);
   camera.setCameraControls(userControl);
 
   /* Build both shaders */
@@ -104,27 +99,9 @@ function main() {
     scene.preDraw();
     program.use();
 
-    // Projection Matrix
-    const aspectRatio = gl.canvas.clientWidth / gl.canvas.clientHeight;
-    const projection = mat4.create();
-    mat4.perspective(projection, Math.radians(30), aspectRatio, 0.1, 100);
-
-    // View Matrix
-    const view = camera.getView();
-
-    // Load Uniforms
-    gl.uniformMatrix4fv(program.uniformLocations.projection, false, projection);
-    gl.uniformMatrix4fv(program.uniformLocations.view, false, view);
-    gl.uniform4fv(
-      program.uniformLocations.light_direction4,
-      vec4.fromValues(1, 1, 1, 1),
-    );
-    gl.uniform1i(program.uniformLocations.colourMode, 1);
-
+    scene.draw(program);
+    camera.draw(program);
     astronautMesh.draw(program);
-
-    gl.uniform1i(program.uniformLocations.colourMode, 2);
-
     sphereMesh.draw(program);
 
     gl.uniform3fv(program.uniformLocations.lightPos, sphereMesh.getLocation());

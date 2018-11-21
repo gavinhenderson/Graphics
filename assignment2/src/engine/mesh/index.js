@@ -11,6 +11,7 @@ class Mesh {
     this.y = 0;
     this.z = 0;
     this.scale = [1, 1, 1];
+    this.colourMode = 2;
   }
 
   getLocation() {
@@ -45,6 +46,8 @@ class Mesh {
     const { attribLocations } = program;
 
     const { vertexBuffer, normalsBuffer, indicies, scale } = this;
+
+    gl.uniform1i(program.uniformLocations.colourMode, this.colourMode);
 
     const model = mat4.create();
     mat4.translate(model, model, this.getLocation());

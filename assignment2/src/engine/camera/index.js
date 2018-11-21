@@ -1,9 +1,10 @@
 import { mat4, vec3 } from "gl-matrix";
 
 class Camera {
-  constructor() {
+  constructor(context) {
     this.x = 0;
     this.z = 10;
+    this.gl = context.gl;
   }
 
   getView() {
@@ -34,6 +35,11 @@ class Camera {
     userControl.addKeyDownListener("d", (event) => {
       this.x++;
     });
+  }
+
+  draw(program) {
+    const view = this.getView();
+    this.gl.uniformMatrix4fv(program.uniformLocations.view, false, view);
   }
 }
 
