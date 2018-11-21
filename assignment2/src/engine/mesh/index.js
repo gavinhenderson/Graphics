@@ -1,9 +1,30 @@
+import { mat4 } from "gl-matrix";
+
 class Mesh {
   constructor(context, meshObj) {
     this.gl = context.gl;
     this.vertexPositions = new Float32Array(meshObj.vertexPositions);
     this.normals = new Float32Array(meshObj.normals);
     this.indicies = meshObj.indices;
+
+    this.x = 0;
+    this.y = 0;
+    this.z = 0;
+    this.scale = [1, 1, 1];
+  }
+
+  getLocation() {
+    return new Float32Array([this.x, this.y, this.z]);
+  }
+
+  setLocation(newLocation) {
+    this.x = newLocation[0];
+    this.y = newLocation[1];
+    this.z = newLocation[2];
+  }
+
+  setScale(newScale) {
+    this.scale = [newScale, newScale, newScale];
   }
 
   initBuffers() {
@@ -23,7 +44,12 @@ class Mesh {
     const gl = this.gl;
     const { attribLocations } = program;
 
-    const { vertexBuffer, normalsBuffer, indicies } = this;
+    const { vertexBuffer, normalsBuffer, indicies, scale } = this;
+
+    const model = mat4.create();
+    mat4.translate(model, model, this.getLocation());
+    mat4.scale(model, model, scale);
+    gl.uniformMatrix4fv(program.uniformLocations.model, false, model);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     gl.enableVertexAttribArray(attribLocations.position);

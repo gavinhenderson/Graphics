@@ -27,24 +27,26 @@ function main() {
   context.createVertexArray();
 
   const sphereModel = mat4.create();
-  mat4.translate(sphereModel, sphereModel, [2, 0, 0]);
+  // mat4.translate(sphereModel, sphereModel, [2, 0, 0]);
   // mat4.scale(sphereModel, sphereModel, vec3.fromValues(0.1, 0.1, 0.1));
   const sphereMesh = new Mesh(context, sphereRaw);
+  sphereMesh.setLocation([2, 0, 0]);
+  sphereMesh.setScale(0.1);
 
   userControl.addKeyDownListener("arrowdown", (event) => {
-    mat4.translate(sphereModel, sphereModel, vec3.fromValues(0, 0, 1));
+    sphereMesh.z++;
   });
 
   userControl.addKeyDownListener("arrowup", (event) => {
-    mat4.translate(sphereModel, sphereModel, vec3.fromValues(0, 0, -1));
+    sphereMesh.z--;
   });
 
   userControl.addKeyDownListener("arrowleft", (event) => {
-    mat4.translate(sphereModel, sphereModel, vec3.fromValues(-1, 0, 0));
+    sphereMesh.x--;
   });
 
   userControl.addKeyDownListener("arrowright", (event) => {
-    mat4.translate(sphereModel, sphereModel, vec3.fromValues(1, 0, 0));
+    sphereMesh.x++;
   });
 
   sphereMesh.initBuffers();
@@ -55,6 +57,7 @@ function main() {
     astronautTexture,
   );
   astronautMesh.initBuffers();
+  astronautMesh.setLocation([0, -2, 0]);
 
   const camera = new Camera();
   camera.setCameraControls(userControl);
@@ -109,9 +112,6 @@ function main() {
     // View Matrix
     const view = camera.getView();
 
-    const model = mat4.create();
-    mat4.translate(model, model, [0, -2, 0]);
-
     // Load Uniforms
     gl.uniformMatrix4fv(program.uniformLocations.projection, false, projection);
     gl.uniformMatrix4fv(program.uniformLocations.view, false, view);
@@ -120,23 +120,14 @@ function main() {
       vec4.fromValues(1, 1, 1, 1),
     );
     gl.uniform1i(program.uniformLocations.colourMode, 1);
-    gl.uniformMatrix4fv(program.uniformLocations.model, false, model);
 
     astronautMesh.draw(program);
 
     gl.uniform1i(program.uniformLocations.colourMode, 2);
-    gl.uniformMatrix4fv(program.uniformLocations.model, false, sphereModel);
 
     sphereMesh.draw(program);
 
-    const point_light_pos = vec3.create();
-    mat4.getTranslation(point_light_pos, sphereModel);
-
-    // console.log(mat4.getTranslation);
-    // console.log(point_light_pos);
-    // console.log(point_light_pos);
-
-    gl.uniform3fv(program.uniformLocations.lightPos, point_light_pos);
+    gl.uniform3fv(program.uniformLocations.lightPos, sphereMesh.getLocation());
 
     gl.disableVertexAttribArray(0);
     program.stopUsing();
