@@ -1,4 +1,4 @@
-import { mat4, vec3 } from "gl-matrix";
+import { mat4 } from "gl-matrix";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
@@ -7,6 +7,8 @@ class Camera {
     this.gl = context.gl;
     this.canvas = context.canvas;
     this.isMouseLocked = false;
+
+    this.lookSensitivity = 0.1;
 
     this.x = 0;
     this.y = 0;
@@ -47,8 +49,14 @@ class Camera {
    * @param {MouseEvent} e
    */
   updatePosition(e) {
-    this.rotX += e.movementX;
-    this.rotY += e.movementY;
+    this.rotX += e.movementX * this.lookSensitivity;
+    this.rotY += e.movementY * this.lookSensitivity;
+
+    // console.log("rotX", this.rotX);
+    // console.log("rotY", this.rotY);
+
+    if (this.rotY > 180) this.rotY = 180;
+    if (this.rotY < -180) this.rotY = -180;
   }
 
   getView() {
