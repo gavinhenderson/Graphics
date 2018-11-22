@@ -5,6 +5,43 @@ class Camera {
     this.x = 0;
     this.z = 10;
     this.gl = context.gl;
+    this.canvas = context.canvas;
+    this.isMouseLocked = false;
+
+    this.setupPointerLock(this.canvas);
+  }
+
+  setupPointerLock(canvas) {
+    canvas.requestPointerLock =
+      canvas.requestPointerLock || canvas.mozRequestPointerLock;
+
+    canvas.onclick = (event) => {
+      canvas.requestPointerLock();
+    };
+
+    document.addEventListener(
+      "pointerlockchange",
+      this.toggleMouseListener.bind(this),
+      false,
+    );
+  }
+
+  toggleMouseListener() {
+    this.isMouseLocked = !this.isMouseLocked;
+
+    if (this.isMouseLocked) {
+      document.onmousemove = this.updatePosition.bind(this);
+    } else {
+      document.onmousemove = null;
+    }
+  }
+
+  /**
+   * @param {MouseEvent} e
+   */
+  updatePosition(e) {
+    console.log(e.movementX);
+    console.log(e.movementY);
   }
 
   getView() {
