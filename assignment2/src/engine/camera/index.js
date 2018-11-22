@@ -1,12 +1,19 @@
 import { mat4, vec3 } from "gl-matrix";
 
+Math.radians = (degrees) => (Math.PI * degrees) / 180;
+
 class Camera {
   constructor(context) {
-    this.x = 0;
-    this.z = 10;
     this.gl = context.gl;
     this.canvas = context.canvas;
     this.isMouseLocked = false;
+
+    this.x = 0;
+    this.y = 0;
+    this.z = -10;
+
+    this.rotX = 0;
+    this.rotY = 0;
 
     this.setupPointerLock(this.canvas);
   }
@@ -40,18 +47,16 @@ class Camera {
    * @param {MouseEvent} e
    */
   updatePosition(e) {
-    console.log(e.movementX);
-    console.log(e.movementY);
+    this.rotX += e.movementX;
+    this.rotY += e.movementY;
   }
 
   getView() {
     const view = mat4.create();
-    mat4.lookAt(
-      view,
-      vec3.fromValues(this.x, 0, this.z),
-      vec3.fromValues(0, 0, 0),
-      vec3.fromValues(0, 1, 0),
-    );
+
+    mat4.rotate(view, view, Math.radians(this.rotX), [0, 1, 0]);
+    mat4.rotate(view, view, Math.radians(this.rotY), [1, 0, 0]);
+    mat4.translate(view, view, [this.x, this.y, this.z]);
 
     return view;
   }
