@@ -11,11 +11,9 @@ import {
 } from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
-import astronautRaw from "./bedroom.json";
-import astronautTexture from "./bedroom.png";
+import bedroomRaw from "./bedroom.json";
+import bedroomTexture from "./bedroom.png";
 import sphereRaw from "./sphere.json";
-
-console.log(astronautRaw);
 
 main();
 
@@ -48,13 +46,9 @@ function main() {
   sphereMesh.initBuffers();
   const pointLight = new PointLight(sphereMesh, context);
 
-  const astronautMesh = new TexturedMesh(
-    context,
-    astronautRaw,
-    astronautTexture,
-  );
-  astronautMesh.initBuffers();
-  astronautMesh.setLocation([0, -2, 0]);
+  const bedroomMesh = new TexturedMesh(context, bedroomRaw, bedroomTexture);
+  bedroomMesh.initBuffers();
+  bedroomMesh.setLocation([0, -2, 0]);
 
   const camera = new Camera(context);
   camera.setCameraControls(userControl);
@@ -103,7 +97,7 @@ function main() {
 
     scene.draw(program);
     camera.draw(program);
-    astronautMesh.draw(program);
+    bedroomMesh.draw(program);
     pointLight.draw(program);
 
     gl.disableVertexAttribArray(0);
