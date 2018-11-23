@@ -1,5 +1,7 @@
 import { mat4 } from "gl-matrix";
 
+Math.radians = (degrees) => (Math.PI * degrees) / 180;
+
 class Mesh {
   constructor(context, meshObj) {
     this.gl = context.gl;
@@ -10,6 +12,11 @@ class Mesh {
     this.x = 0;
     this.y = 0;
     this.z = 0;
+
+    this.rotY = 0;
+    this.rotX = 0;
+    this.rotZ = 0;
+
     this.scale = [1, 1, 1];
     this.colourMode = 2;
   }
@@ -26,6 +33,18 @@ class Mesh {
 
   setScale(newScale) {
     this.scale = [newScale, newScale, newScale];
+  }
+
+  addRotationY(deg) {
+    this.rotY += deg;
+  }
+
+  addRotationX(deg) {
+    this.rotX += deg;
+  }
+
+  addRotationZ(deg) {
+    this.rotZ += deg;
   }
 
   initBuffers() {
@@ -45,11 +64,22 @@ class Mesh {
     const gl = this.gl;
     const { attribLocations } = program;
 
-    const { vertexBuffer, normalsBuffer, indicies, scale } = this;
+    const {
+      vertexBuffer,
+      normalsBuffer,
+      indicies,
+      scale,
+      rotX,
+      rotY,
+      rotZ,
+    } = this;
 
     gl.uniform1i(program.uniformLocations.colourMode, this.colourMode);
 
     const model = mat4.create();
+    mat4.rotate(model, model, Math.radians(rotX), [1, 0, 0]);
+    mat4.rotate(model, model, Math.radians(rotY), [0, 1, 0]);
+    mat4.rotate(model, model, Math.radians(rotZ), [0, 0, 1]);
     mat4.translate(model, model, this.getLocation());
     mat4.scale(model, model, scale);
     gl.uniformMatrix4fv(program.uniformLocations.model, false, model);

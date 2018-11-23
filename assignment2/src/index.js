@@ -49,6 +49,7 @@ function main() {
   const bedroomMesh = new TexturedMesh(context, bedroomRaw, bedroomTexture);
   bedroomMesh.initBuffers();
   bedroomMesh.setLocation([0, -2, 0]);
+  bedroomMesh.addRotationY(180);
 
   const camera = new Camera(context);
   camera.setCameraControls(userControl);
