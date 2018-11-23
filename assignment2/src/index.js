@@ -11,9 +11,11 @@ import {
 } from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
-import astronautRaw from "./astronaut.json";
-import astronautTexture from "./astronaut.png";
+import astronautRaw from "./bedroom.json";
+import astronautTexture from "./bedroom.png";
 import sphereRaw from "./sphere.json";
+
+console.log(astronautRaw);
 
 main();
 
