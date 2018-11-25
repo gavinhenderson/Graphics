@@ -11,11 +11,10 @@ out vec4 fragColor;
 uniform int mode;
 uniform vec3 lightPos;
 
-// const vec3 lightPos = vec3(0,1.0,0);
 const vec3 lightColor = vec3(1.0, 1.0, 1.0);
 const float lightPower = 10.0;
 const vec3 diffuseColor = vec3(0.1, 0.1, 0.1);
-const vec3 specColor = vec3(1.0, 1.0, 1.0);
+const vec3 specColor = vec3(0.5, 0.5, 0.5);
 const float shininess = 16.0;
 const float screenGamma = 2.2;
 

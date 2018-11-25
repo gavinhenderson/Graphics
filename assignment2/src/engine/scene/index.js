@@ -4,6 +4,7 @@ Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
 class Scene {
   constructor(context) {
+    this.canvas = context.canvas;
     this.gl = context.gl;
   }
 
@@ -18,6 +19,7 @@ class Scene {
 
   draw(program) {
     const { gl } = this;
+
     const aspectRatio = gl.canvas.clientWidth / gl.canvas.clientHeight;
     const projection = mat4.create();
     mat4.perspective(projection, Math.radians(30), aspectRatio, 0.1, 100);
