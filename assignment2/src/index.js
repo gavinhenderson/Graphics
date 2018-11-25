@@ -46,6 +46,10 @@ function main() {
   sphereMesh.initBuffers();
   const pointLight = new PointLight(sphereMesh, context);
 
+  userControl.addKeyUpListener("1", (event) => {
+    pointLight.toggleLight();
+  });
+
   const bedroomMesh = new TexturedMesh(context, bedroomRaw, bedroomTexture);
   bedroomMesh.initBuffers();
   bedroomMesh.setLocation([0, -2, 0]);
@@ -76,6 +80,7 @@ function main() {
     "light_direction4",
     "colourMode",
     "lightPos",
+    "lightPower",
   ]);
 
   const scene = new Scene(context);

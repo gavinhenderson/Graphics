@@ -11,12 +11,14 @@ out vec4 fragColor;
 uniform int mode;
 uniform vec3 lightPos;
 
+// 1 is on
+// 0 is off
+uniform float lightPower;
+
 const vec3 lightColor = vec3(1.0, 1.0, 1.0);
-const float lightPower = 10.0;
-const vec3 diffuseColor = vec3(0.1, 0.1, 0.1);
-const vec3 specColor = vec3(0.5, 0.5, 0.5);
+const vec3 diffuseColor = vec3(1.0, 1.0, 1.0);
+const vec3 specColor = vec3(1.0, 1.0, 1.0);
 const float shininess = 16.0;
-const float screenGamma = 2.2;
 
 uniform int colourMode;
 uniform sampler2D texSampler;
@@ -59,9 +61,6 @@ void main()
   vec3 colorLinear = ambientColor +
                      diffuseColor * lambertian * lightColor * lightPower / distance +
                      specColor * specular * lightColor * lightPower / distance;
-  // apply gamma correction (assume ambientColor, diffuseColor and specColor
-  // have been linearized, i.e. have no gamma correction in them)
-  vec3 colorGammaCorrected = pow(colorLinear, vec3(1.0/screenGamma));
-  // use the gamma corrected color in the fragment
-  fragColor = vec4(colorGammaCorrected, 1.0);
+
+  fragColor = vec4(colorLinear, 1.0);
 }

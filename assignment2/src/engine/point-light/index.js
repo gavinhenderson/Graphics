@@ -2,6 +2,12 @@ class PointLight {
   constructor(mesh, context) {
     this.gl = context.gl;
     this.mesh = mesh;
+
+    this.isLightOn = true;
+  }
+
+  toggleLight() {
+    this.isLightOn = !this.isLightOn;
   }
 
   draw(program) {
@@ -9,6 +15,9 @@ class PointLight {
       program.uniformLocations.lightPos,
       this.mesh.getLocation(),
     );
+
+    const lightPower = this.isLightOn ? 1 : 0;
+    this.gl.uniform1f(program.uniformLocations.lightPower, lightPower);
 
     this.mesh.draw(program);
   }
