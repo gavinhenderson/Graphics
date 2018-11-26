@@ -8,7 +8,6 @@ in vec2 ftexcoord;
 
 out vec4 fragColor;
 
-uniform int mode;
 uniform vec3 lightPos;
 
 // 1 is on
@@ -41,14 +40,6 @@ vec3 getLight(vec3 ambientColor) {
     vec3 halfDir = normalize(lightDir + viewDir);
     float specAngle = max(dot(halfDir, normal), 0.0);
     specular = pow(specAngle, shininess);
-       
-    // this is phong (for comparison)
-    if(mode == 2) {
-      vec3 reflectDir = reflect(-lightDir, normal);
-      specAngle = max(dot(reflectDir, viewDir), 0.0);
-      // note that the exponent is different here
-      specular = pow(specAngle, shininess/4.0);
-    }
   }
 
   vec3 colorLinear = ambientColor +
@@ -73,6 +64,9 @@ void main()
     colorLinear = getLight(ambientColor);
   } else {
     colorLinear = ambientColor;
+    if(lightPower == 0.0) {
+      colorLinear = ambientColor * 0.5;
+    }
   }
 
   fragColor = vec4(colorLinear, 1.0);

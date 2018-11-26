@@ -82,6 +82,7 @@ function main() {
     "lightPos",
     "lightPower",
     "lightingMode",
+    "mode",
   ]);
 
   const scene = new Scene(context);
@@ -101,6 +102,8 @@ function main() {
 
     scene.preDraw();
     program.use();
+
+    gl.uniform1i(program.uniformLocations.mode, 1);
 
     scene.draw(program);
     camera.draw(program);
