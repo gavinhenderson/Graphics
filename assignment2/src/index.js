@@ -81,6 +81,7 @@ function main() {
     "colourMode",
     "lightPos",
     "lightPower",
+    "lightingMode",
   ]);
 
   const scene = new Scene(context);

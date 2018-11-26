@@ -21,17 +21,10 @@ const vec3 specColor = vec3(1.0, 1.0, 1.0);
 const float shininess = 16.0;
 
 uniform int colourMode;
+uniform int lightingMode;
 uniform sampler2D texSampler;
 
-void main()
-{
-  vec3 ambientColor;
-  if(colourMode == 1) {
-    ambientColor = texture(texSampler, ftexcoord).xyz;
-  } else {
-    ambientColor = vec3(0.1, 0.0, 0.0);
-  }
-
+vec3 getLight(vec3 ambientColor) {
   vec3 normal = normalize(normalInterp);
   vec3 lightDir = lightPos - vertPos;
   float distance = length(lightDir);
@@ -61,6 +54,26 @@ void main()
   vec3 colorLinear = ambientColor +
                      diffuseColor * lambertian * lightColor * lightPower / distance +
                      specColor * specular * lightColor * lightPower / distance;
+
+  return colorLinear;
+
+}
+
+void main()
+{
+  vec3 ambientColor;
+  if(colourMode == 1) {
+    ambientColor = texture(texSampler, ftexcoord).xyz;
+  } else {
+    ambientColor = vec3(1.0, 0.0, 0.0);
+  }
+
+  vec3 colorLinear;
+  if(lightingMode == 1) {
+    colorLinear = getLight(ambientColor);
+  } else {
+    colorLinear = ambientColor;
+  }
 
   fragColor = vec4(colorLinear, 1.0);
 }

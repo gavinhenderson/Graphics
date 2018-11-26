@@ -19,6 +19,7 @@ class Mesh {
 
     this.scale = [1, 1, 1];
     this.colourMode = 2;
+    this.lightingMode = 1;
   }
 
   getLocation() {
@@ -75,6 +76,7 @@ class Mesh {
     } = this;
 
     gl.uniform1i(program.uniformLocations.colourMode, this.colourMode);
+    gl.uniform1i(program.uniformLocations.lightingMode, this.lightingMode);
 
     const model = mat4.create();
     mat4.rotate(model, model, Math.radians(rotX), [1, 0, 0]);

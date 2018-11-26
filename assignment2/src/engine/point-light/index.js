@@ -3,6 +3,7 @@ class PointLight {
     this.gl = context.gl;
     this.mesh = mesh;
 
+    mesh.lightingMode = 2;
     this.isLightOn = true;
   }
 
