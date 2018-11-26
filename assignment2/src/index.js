@@ -44,6 +44,7 @@ function main() {
   });
 
   sphereMesh.initBuffers();
+  sphereMesh.y += 0.5;
   const pointLight = new PointLight(sphereMesh, context);
 
   userControl.addKeyUpListener("1", (event) => {

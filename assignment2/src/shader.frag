@@ -17,13 +17,14 @@ uniform float lightPower;
 const vec3 lightColor = vec3(1.0, 1.0, 1.0);
 const vec3 diffuseColor = vec3(1.0, 1.0, 1.0);
 const vec3 specColor = vec3(1.0, 1.0, 1.0);
-const float shininess = 16.0;
+const float shininess = 0.1;
 
 uniform int colourMode;
 uniform int lightingMode;
 uniform sampler2D texSampler;
 
 vec3 getLight(vec3 ambientColor) {
+  float lightPower2 = 0.1;
   vec3 normal = normalize(normalInterp);
   vec3 lightDir = lightPos - vertPos;
   float distance = length(lightDir);
@@ -43,8 +44,8 @@ vec3 getLight(vec3 ambientColor) {
   }
 
   vec3 colorLinear = ambientColor +
-                     diffuseColor * lambertian * lightColor * lightPower / distance +
-                     specColor * specular * lightColor * lightPower / distance;
+                     diffuseColor * lambertian * lightColor * lightPower2 / distance +
+                     specColor * specular * lightColor * lightPower2 / distance;
 
   return colorLinear;
 
