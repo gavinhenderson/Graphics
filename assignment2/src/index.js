@@ -13,7 +13,7 @@ import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
 import bedroomRaw from "./bedroom.json";
 import bedroomTexture from "./bedroom.png";
-import sphereRaw from "./lightbulb.json";
+import lightbulbRaw from "./lightbulb.json";
 
 main();
 
@@ -23,30 +23,30 @@ function main() {
   const context = new Context("glCanvas");
   context.createVertexArray();
 
-  const sphereMesh = new Mesh(context, sphereRaw);
-  sphereMesh.setLocation([-1, -1.2, 0]);
-  sphereMesh.setScale(0.005);
-  sphereMesh.addRotationZ(180);
+  const lightbulbMesh = new Mesh(context, lightbulbRaw);
+  lightbulbMesh.setLocation([-1, -1.2, 0]);
+  lightbulbMesh.setScale(0.005);
+  lightbulbMesh.addRotationZ(180);
 
   userControl.addKeyDownListener("arrowdown", (event) => {
-    sphereMesh.z += 0.1;
+    lightbulbMesh.z += 0.1;
   });
 
   userControl.addKeyDownListener("arrowup", (event) => {
-    sphereMesh.z -= 0.1;
+    lightbulbMesh.z -= 0.1;
   });
 
   userControl.addKeyDownListener("arrowleft", (event) => {
-    sphereMesh.x -= 0.1;
+    lightbulbMesh.x -= 0.1;
   });
 
   userControl.addKeyDownListener("arrowright", (event) => {
-    sphereMesh.x += 0.1;
+    lightbulbMesh.x += 0.1;
   });
 
-  sphereMesh.initBuffers();
-  sphereMesh.y += 0.5;
-  const pointLight = new PointLight(sphereMesh, context);
+  lightbulbMesh.initBuffers();
+  lightbulbMesh.y += 0.5;
+  const pointLight = new PointLight(lightbulbMesh, context);
 
   userControl.addKeyUpListener("1", (event) => {
     pointLight.toggleLight();
