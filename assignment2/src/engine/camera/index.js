@@ -93,7 +93,7 @@ class Camera {
     let radRotX = Math.radians(this.rotX);
     let radRotY = Math.radians(this.rotY);
 
-    let dY = this.speed * Math.sin(radRotY);
+    let dY = this.speed * Math.sin(radRotY) * direction;
     let dX = this.speed * Math.cos(radRotY) * Math.sin(-radRotX) * direction;
     let dZ = this.speed * Math.cos(radRotY) * Math.cos(radRotX) * direction;
 
