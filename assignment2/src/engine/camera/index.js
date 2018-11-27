@@ -75,21 +75,6 @@ class Camera {
   }
 
   moveZ(direction) {
-    /*
-      let rX = Math.radians(this.rotX);
-      let rY = Math.radians(this.rotY);
-
-      let dY = this.speed * Math.sin(rY);
-      let H = this.speed * Math.cos(rY);
-
-      let dX = H * Math.sin(-rX); // Delta X
-      let dZ = H * Math.cos(rX); // Delta Z
-
-      this.y += dY;
-      this.x += dX;
-      this.z += dZ;
-    */
-
     let radRotX = Math.radians(this.rotX);
     let radRotY = Math.radians(this.rotY);
 

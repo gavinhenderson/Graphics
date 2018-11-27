@@ -25,11 +25,6 @@ function main() {
   const context = new Context("glCanvas");
   context.createVertexArray();
 
-  const lightbulbMesh = new Mesh(context, lightbulbRaw);
-  lightbulbMesh.setLocation([-1, -1.2, 0]);
-  lightbulbMesh.setScale(0.005);
-  lightbulbMesh.addRotationZ(180);
-
   userControl.addKeyDownListener("arrowdown", (event) => {
     lightbulbMesh.z += 0.1;
   });
@@ -46,8 +41,13 @@ function main() {
     lightbulbMesh.x += 0.1;
   });
 
+  const lightbulbMesh = new Mesh(context, lightbulbRaw);
+  lightbulbMesh.setLocation([-1, -1.2, 0]);
+  lightbulbMesh.setScale(0.005);
+  lightbulbMesh.addRotationZ(180);
   lightbulbMesh.initBuffers();
   lightbulbMesh.y += 0.5;
+
   const pointLight = new PointLight(lightbulbMesh, context);
 
   userControl.addKeyUpListener("1", (event) => {
@@ -61,7 +61,13 @@ function main() {
 
   const carMesh = new TexturedMesh(context, carRaw, carTexture);
   carMesh.initBuffers();
+  carMesh.y = -2.6;
   carMesh.setScale(0.5);
+
+  setInterval(() => {
+    carMesh.addRotationY(2);
+    carMesh.x -= 0.001;
+  }, 1);
 
   const camera = new Camera(context);
   camera.setCameraControls(userControl);
