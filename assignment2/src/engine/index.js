@@ -7,6 +7,7 @@ import TexturedMesh from "./textured-mesh";
 import Scene from "./scene";
 import UserControl from "./user-control";
 import PointLight from "./point-light";
+import Particles from "./particles";
 
 export {
   createShader,
@@ -18,4 +19,5 @@ export {
   Scene,
   UserControl,
   PointLight,
+  Particles,
 };
