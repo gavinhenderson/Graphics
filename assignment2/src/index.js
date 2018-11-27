@@ -13,6 +13,8 @@ import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
 import bedroomRaw from "./bedroom.json";
 import bedroomTexture from "./bedroom.png";
+import carRaw from "./car.json";
+import carTexture from "./car-texture.png";
 import lightbulbRaw from "./lightbulb.json";
 
 main();
@@ -56,6 +58,9 @@ function main() {
   bedroomMesh.initBuffers();
   bedroomMesh.setLocation([0, -2, 0]);
   bedroomMesh.addRotationY(180);
+
+  const carMesh = new TexturedMesh(context, carRaw, carTexture);
+  carMesh.initBuffers();
 
   const camera = new Camera(context);
   camera.setCameraControls(userControl);
@@ -110,6 +115,7 @@ function main() {
     scene.draw(program);
     camera.draw(program);
     bedroomMesh.draw(program);
+    carMesh.draw(program);
     pointLight.draw(program);
 
     gl.disableVertexAttribArray(0);
