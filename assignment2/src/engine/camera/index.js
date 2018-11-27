@@ -68,47 +68,49 @@ class Camera {
     return view;
   }
 
+  setPosition(position) {
+    this.x = position[0];
+    this.y = position[1];
+    this.z = position[2];
+  }
+
+  moveZ(direction) {
+    let radRotX = Math.radians(this.rotX);
+    let radRotY = Math.radians(this.rotY);
+
+    let dY = this.speed * Math.sin(radRotX) * direction;
+    let dX = this.speed * Math.cos(radRotY) * Math.sin(-radRotX) * direction;
+    let dZ = this.speed * Math.cos(radRotY) * Math.cos(radRotX) * direction;
+
+    let newX = dX + this.x;
+    let newY = dY + this.y;
+    let newZ = dZ + this.z;
+
+    this.setPosition([newX, newY, newZ]);
+  }
+
+  moveX(direction) {
+    let rX = Math.radians(this.rotX);
+    let angle = (Math.PI / 2) * direction;
+    this.z += this.speed * Math.cos(rX + angle);
+    this.x -= this.speed * Math.sin(rX + angle);
+  }
+
   setCameraControls(userControl) {
     userControl.addKeyDownListener("w", (event) => {
-      let rX = Math.radians(this.rotX);
-      let rY = Math.radians(this.rotY);
-
-      let dY = this.speed * Math.sin(rY);
-      let H = this.speed * Math.cos(rY);
-
-      let dX = H * Math.sin(-rX); // Delta X
-      let dZ = H * Math.cos(rX); // Delta Z
-
-      this.y += dY;
-      this.x += dX;
-      this.z += dZ;
+      this.moveZ(1);
     });
 
     userControl.addKeyDownListener("a", (event) => {
-      let rX = Math.radians(this.rotX);
-      this.z += this.speed * Math.cos(rX - Math.PI / 2);
-      this.x -= this.speed * Math.sin(rX - Math.PI / 2);
+      this.moveX(-1);
     });
 
     userControl.addKeyDownListener("s", (event) => {
-      let rX = Math.radians(this.rotX); // Rotation in X (left/right)
-      let rY = Math.radians(this.rotY); // Rotation in Y (up/down)
-
-      let dY = this.speed * Math.sin(rY); // Delta Y
-      let H = this.speed * Math.cos(rY); // Movement distance in XZ plane
-
-      let dX = H * Math.sin(-rX); // Delta X
-      let dZ = H * Math.cos(rX); // Delta Z
-
-      this.y -= dY;
-      this.x -= dX;
-      this.z -= dZ;
+      this.moveZ(-1);
     });
 
     userControl.addKeyDownListener("d", (event) => {
-      let rX = Math.radians(this.rotX);
-      this.z += this.speed * Math.cos(rX + Math.PI / 2);
-      this.x -= this.speed * Math.sin(rX + Math.PI / 2);
+      this.moveX(1);
     });
   }
 
