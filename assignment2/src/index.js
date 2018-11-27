@@ -17,6 +17,8 @@ import carRaw from "./car.json";
 import carTexture from "./car-texture.png";
 import lightbulbRaw from "./lightbulb.json";
 
+Math.radians = (degrees) => (Math.PI * degrees) / 180;
+
 main();
 
 function main() {
@@ -42,7 +44,7 @@ function main() {
   });
 
   const lightbulbMesh = new Mesh(context, lightbulbRaw);
-  lightbulbMesh.setLocation([-1, -1.2, 0]);
+  lightbulbMesh.setLocation([0, 0, 0]);
   lightbulbMesh.setScale(0.005);
   lightbulbMesh.addRotationZ(180);
   lightbulbMesh.initBuffers();
@@ -60,12 +62,24 @@ function main() {
   bedroomMesh.addRotationY(180);
 
   const carMesh = new TexturedMesh(context, carRaw, carTexture);
+  carMesh.x = 0.5;
+  carMesh.z = 0.5;
   carMesh.initBuffers();
   carMesh.y = -2.6;
   carMesh.setScale(0.5);
 
+  let currentCarAngle = 0;
+  let carStartingX = carMesh.x;
+  let carStartingZ = carMesh.z;
+
   setInterval(() => {
-    carMesh.addRotationY(2);
+    currentCarAngle++;
+    let radius = 1;
+    carMesh.rotY = -currentCarAngle;
+    const theta = Math.radians(currentCarAngle);
+    carMesh.x = Math.cos(theta) * radius + carStartingX;
+    carMesh.z = Math.sin(theta) * radius + carStartingZ;
+
     carMesh.x -= 0.001;
   }, 1);
 
