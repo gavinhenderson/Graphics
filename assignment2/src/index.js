@@ -13,7 +13,7 @@ import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
 import bedroomRaw from "./bedroom.json";
 import bedroomTexture from "./bedroom.png";
-import sphereRaw from "./sphere.json";
+import sphereRaw from "./lightbulb.json";
 
 main();
 
@@ -24,8 +24,9 @@ function main() {
   context.createVertexArray();
 
   const sphereMesh = new Mesh(context, sphereRaw);
-  sphereMesh.setLocation([2, 0, 0]);
-  sphereMesh.setScale(0.1);
+  sphereMesh.setLocation([-1, -1.2, 0]);
+  sphereMesh.setScale(0.005);
+  sphereMesh.addRotationZ(180);
 
   userControl.addKeyDownListener("arrowdown", (event) => {
     sphereMesh.z += 0.1;

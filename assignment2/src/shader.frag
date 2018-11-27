@@ -24,7 +24,6 @@ uniform int lightingMode;
 uniform sampler2D texSampler;
 
 vec3 getLight(vec3 ambientColor) {
-  float lightPower2 = 0.1;
   vec3 normal = normalize(normalInterp);
   vec3 lightDir = lightPos - vertPos;
   float distance = length(lightDir);
@@ -44,8 +43,8 @@ vec3 getLight(vec3 ambientColor) {
   }
 
   vec3 colorLinear = ambientColor +
-                     diffuseColor * lambertian * lightColor * lightPower2 / distance +
-                     specColor * specular * lightColor * lightPower2 / distance;
+                     diffuseColor * lambertian * lightColor * lightPower / distance +
+                     specColor * specular * lightColor * lightPower / distance;
 
   return colorLinear;
 
@@ -57,7 +56,11 @@ void main()
   if(colourMode == 1) {
     ambientColor = texture(texSampler, ftexcoord).xyz;
   } else {
-    ambientColor = vec3(1.0, 0.0, 0.0);
+    if(lightPower == 0.0) {
+      ambientColor = vec3(1.0, 0.98, 0.46);
+    } else {
+      ambientColor = vec3(1.0, 0.96, 0.0);
+    }
   }
 
   vec3 colorLinear;
