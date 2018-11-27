@@ -61,6 +61,7 @@ function main() {
 
   const carMesh = new TexturedMesh(context, carRaw, carTexture);
   carMesh.initBuffers();
+  carMesh.setScale(0.5);
 
   const camera = new Camera(context);
   camera.setCameraControls(userControl);
