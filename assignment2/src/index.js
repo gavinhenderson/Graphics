@@ -4,6 +4,7 @@ import {
   Program,
   Mesh,
   TexturedMesh,
+  NormalMapMesh,
   Camera,
   Scene,
   UserControl,
@@ -18,6 +19,9 @@ import carRaw from "./car.json";
 import carTexture from "./car-texture.png";
 import lightbulbRaw from "./lightbulb.json";
 import setupUserControls from "./setupUserControls";
+import wallRaw from "./wall.json";
+import pebbleDashTexture from "../raw/pebbledash-tile.jpg";
+import pebbleDashNormalMap from "../raw/pebble-dash-normal.png";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
@@ -33,6 +37,17 @@ function main() {
   lightbulbMesh.addRotationZ(180);
   lightbulbMesh.initBuffers();
   lightbulbMesh.y += 0.5;
+
+  const wallMesh = new NormalMapMesh(
+    context,
+    wallRaw,
+    pebbleDashTexture,
+    pebbleDashNormalMap,
+  );
+  wallMesh.setLocation([1, -1, -2.7]);
+  wallMesh.addRotationY(5);
+  wallMesh.scale = [2.7, 1.6, 1];
+  wallMesh.initBuffers();
 
   const pointLight = new PointLight(lightbulbMesh, context);
 
@@ -55,7 +70,6 @@ function main() {
   let carStartingX = carMesh.x;
   let carStartingZ = carMesh.z;
 
-  /*
   setInterval(() => {
     currentCarAngle++;
     let radius = 1;
@@ -66,7 +80,6 @@ function main() {
 
     carMesh.x -= 0.001;
   }, 1);
-  */
 
   const camera = new Camera(context);
   camera.setCameraControls(userControl);
@@ -126,10 +139,11 @@ function main() {
     bedroomMesh.draw(program);
     carMesh.draw(program);
     pointLight.draw(program);
+    wallMesh.draw(program);
 
     gl.disableVertexAttribArray(0);
     program.stopUsing();
 
-    particles.draw(deltaTime);
+    // particles.draw(deltaTime);
   }
 }

@@ -22,6 +22,7 @@ const float shininess = 0.1;
 uniform int colourMode;
 uniform int lightingMode;
 uniform sampler2D texSampler;
+uniform sampler2D normalMap;
 
 vec3 getLight(vec3 ambientColor) {
   vec3 normal = normalize(normalInterp);
@@ -55,12 +56,15 @@ void main()
   vec3 ambientColor;
   if(colourMode == 1) {
     ambientColor = texture(texSampler, ftexcoord).xyz;
-  } else {
+  } else if (colourMode == 2) {
     if(lightPower == 0.0) {
       ambientColor = vec3(1.0, 0.98, 0.46);
     } else {
       ambientColor = vec3(1.0, 0.96, 0.0);
     }
+  } else if (colourMode == 3) {
+    ambientColor = texture(normalMap, ftexcoord).xyz;
+    // ambientColor = vec3(1,1,1);
   }
 
   vec3 colorLinear;

@@ -30,11 +30,13 @@ class TexturedMesh extends Mesh {
   }
 
   draw(program) {
+    /** @type {WebGLRenderingContext} */
     const gl = this.gl;
     const { attribLocations } = program;
     const { texcoordsBuffer } = this;
 
     if (this.image) {
+      gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, this.texture);
       gl.texImage2D(
         gl.TEXTURE_2D,
