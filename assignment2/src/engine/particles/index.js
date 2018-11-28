@@ -52,7 +52,8 @@ class Particles {
     let vertexes = [];
     let offsets = [];
     for (let i = 0; i < this.numberOfParticles; i++) {
-      let currentLifetime = Math.abs(Math.random() * 8);
+      // let currentLifetime = Math.abs(Math.random() * 10);
+      let currentLifetime = 10;
       let currentOffset = [0, 0, 0]; // Make random
       vertexes.push(...this.singleVertex);
 
@@ -97,11 +98,11 @@ class Particles {
 
     this.time += deltaTime;
 
-    // const model = this.mesh.getModel();
-    const model = mat4.create();
+    const model = this.mesh.getModel();
+    // const model = mat4.create();
     const projection = this.scene.getProjection();
     const view = this.camera.getView();
-    this.startingPos = this.mesh.getLocation();
+    this.startingPos = [0, 0, -1.5];
 
     const { attribLocations, uniformLocations } = this.program;
     /** @type {WebGLRenderingContext} */

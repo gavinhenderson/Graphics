@@ -100,7 +100,7 @@ function main() {
 
   const scene = new Scene(context);
 
-  const particles = new Particles(context, 2, carMesh, scene, camera);
+  const particles = new Particles(context, 1, carMesh, scene, camera);
   particles.initBuffers();
 
   let then = 0;

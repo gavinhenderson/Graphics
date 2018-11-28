@@ -12,41 +12,52 @@ uniform float currentTime;
 
 void main(){
   float currentPointInCycle = mod(currentTime, lifetime);
-  vec4 position = vec4(currentPointInCycle+vertex.x, currentPointInCycle+vertex.y, currentPointInCycle, 1);
-  // position.xy += vertex.xy;
+  
+  float velocity = 1.0;
+  float size = 0.1;
 
-  mat4 modelview = view * model;
-  vec4 vertPos4 = projection * modelview * position;
+  bool billboarding = true;
+  vec3 origin = vec3(startingPos + offsetFromCenter);
 
-  gl_Position = vertPos4;
+  // this.z = Math.cos(theta) * this.radius;
+  // this.x = Math.sin(theta) * this.radius;
+
+  float angle = currentPointInCycle * 18.0;
+  float radius = 2.0;
+
+  float currentX = cos(radians(angle)) * radius;
+  float currentY = sin(radians(angle)) * radius;
+  // currentY = currentY / 4.0;
+  vec3 arc = vec3(currentX, currentY, 0.0);
+
 
   /*
-  float velocity = 1.0;
-  // float size = (lifetime * lifetime) * 0.05;
-  // size = 0.001;
-  float size = (4.0*4.0) * 0.05;
-
-  bool billboarding = false;
-  vec4 position = vec4(startingPos + offsetFromCenter + (currentPointInCycle * velocity),1.0);
-
-  if(billboarding == true){
-    vec3 cameraRight = vec3(
-      view[0].x, view[1].x, view[2].x
-    );
-    vec3 cameraUp = vec3(
-      view[0].y, view[1].y, view[2].y
-    );
-
-    position.xyz += (cameraRight * vertex.x * size) +
-     (cameraUp * vertex.y * size);
+  float currentY;
+  if(currentPointInCycle >= 5.0) {
+    currentY = abs(currentPointInCycle-10.0);
   } else {
-    position.xy += vertex.xy;
+    currentY = currentPointInCycle;
   }
+  vec3 arc = vec3(currentPointInCycle, currentY/4.0, 0);
+  */
+
+  vec4 position = vec4(arc + origin ,1.0);
+
+  vec3 cameraRight = vec3(
+    view[0].x, view[1].x, view[2].x
+  );
+  vec3 cameraUp = vec3(
+    view[0].y, view[1].y, view[2].y
+  );
+
+  position.xyz += (cameraRight * vertex.x * size) +
+    (cameraUp * vertex.y * size);
+  
 
   mat4 modelview = view * model;
 
   vec4 vertPos4 = projection * modelview * position;
 
   gl_Position = vertPos4;
-  */
+  
 }
