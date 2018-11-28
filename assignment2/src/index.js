@@ -100,8 +100,8 @@ function main() {
 
   const scene = new Scene(context);
 
-  const particles = new Particles(context, 1, carMesh, scene, camera);
-  particles.initBuffers();
+  // const particles = new Particles(context, 5, carMesh, scene, camera);
+  // particles.initBuffers();
 
   let then = 0;
   function render(now) {
@@ -123,9 +123,9 @@ function main() {
 
     scene.draw(program);
     camera.draw(program);
-    // bedroomMesh.draw(program);
-    // carMesh.draw(program);
-    // pointLight.draw(program);
+    bedroomMesh.draw(program);
+    carMesh.draw(program);
+    pointLight.draw(program);
 
     gl.disableVertexAttribArray(0);
     program.stopUsing();

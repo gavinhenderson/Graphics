@@ -27,7 +27,6 @@ void main(){
 
   float currentX = cos(radians(angle)) * radius;
   float currentY = sin(radians(angle)) * radius;
-  // currentY = currentY / 4.0;
   vec3 arc = vec3(currentX, currentY, 0.0);
 
 
@@ -41,7 +40,7 @@ void main(){
   vec3 arc = vec3(currentPointInCycle, currentY/4.0, 0);
   */
 
-  vec4 position = vec4(arc + origin ,1.0);
+  vec4 position = vec4(arc + origin,1.0);
 
   vec3 cameraRight = vec3(
     view[0].x, view[1].x, view[2].x
@@ -53,6 +52,8 @@ void main(){
   position.xyz += (cameraRight * vertex.x * size) +
     (cameraUp * vertex.y * size);
   
+  position.x += vertex.x;
+  position.y += vertex.y;
 
   mat4 modelview = view * model;
 

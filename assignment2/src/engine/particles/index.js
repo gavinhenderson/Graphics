@@ -14,6 +14,7 @@ class Particles {
       -1.0, -1.0,
       1.0, -1.0,
       1.0, 1.0,
+      -1.0, 1.0
     ];
 
     this.time = 0;
@@ -52,12 +53,12 @@ class Particles {
     let vertexes = [];
     let offsets = [];
     for (let i = 0; i < this.numberOfParticles; i++) {
-      // let currentLifetime = Math.abs(Math.random() * 10);
+      // let currentLifetime = Math.random() * 10;
       let currentLifetime = 10;
       let currentOffset = [0, 0, 0]; // Make random
       vertexes.push(...this.singleVertex);
 
-      for (let j = 0; j < 3; j++) {
+      for (let j = 0; j < 4; j++) {
         offsets.push(...currentOffset);
         lifetimes.push(currentLifetime);
       }
@@ -102,7 +103,7 @@ class Particles {
     // const model = mat4.create();
     const projection = this.scene.getProjection();
     const view = this.camera.getView();
-    this.startingPos = [0, 0, -1.5];
+    this.startingPos = new Float32Array([0, 0, 0]);
 
     const { attribLocations, uniformLocations } = this.program;
     /** @type {WebGLRenderingContext} */
@@ -131,7 +132,7 @@ class Particles {
     gl.enableVertexAttribArray(attribLocations.offset);
     gl.vertexAttribPointer(attribLocations.offset, 3, gl.FLOAT, false, 0, 0);
 
-    gl.drawArrays(gl.TRIANGLES, 0, this.numberOfParticles * 3);
+    gl.drawArrays(gl.TRIANGLES, 0, this.numberOfParticles * 4);
 
     gl.disableVertexAttribArray(0);
     this.program.stopUsing();
