@@ -14,7 +14,6 @@ class Particles {
       -1.0, -1.0,
       1.0, -1.0,
       1.0, 1.0,
-      -1.0, 1.0
     ];
 
     this.time = 0;
@@ -41,7 +40,7 @@ class Particles {
 
     this.program.addMultipleUniforms([
       "startingPos",
-      "time",
+      "currentTime",
       "projection",
       "model",
       "view",
@@ -57,11 +56,15 @@ class Particles {
       let currentOffset = [0, 0, 0]; // Make random
       vertexes.push(...this.singleVertex);
 
-      for (let j = 0; j < 4; j++) {
-        lifetimes.push(currentLifetime);
+      for (let j = 0; j < 3; j++) {
         offsets.push(...currentOffset);
+        lifetimes.push(currentLifetime);
       }
     }
+
+    // console.log("lifetimes", lifetimes.length / 1);
+    // console.log("vertexes", vertexes.length / 2);
+    // console.log("offsets", offsets.length / 3);
 
     lifetimes = new Float32Array(lifetimes);
     vertexes = new Float32Array(vertexes);
@@ -94,7 +97,8 @@ class Particles {
 
     this.time += deltaTime;
 
-    const model = this.mesh.getModel();
+    // const model = this.mesh.getModel();
+    const model = mat4.create();
     const projection = this.scene.getProjection();
     const view = this.camera.getView();
     this.startingPos = this.mesh.getLocation();
@@ -106,8 +110,10 @@ class Particles {
 
     // mat4.scale(model, model, [5, 5, 5]);
 
+    // console.log(this.time);
+
     gl.uniformMatrix4fv(uniformLocations.model, false, model);
-    gl.uniform1f(uniformLocations.time, this.time);
+    gl.uniform1f(uniformLocations.currentTime, this.time);
     gl.uniformMatrix4fv(uniformLocations.projection, false, projection);
     gl.uniformMatrix4fv(uniformLocations.view, false, view);
     gl.uniform3fv(uniformLocations.startingPos, this.startingPos);
@@ -124,8 +130,9 @@ class Particles {
     gl.enableVertexAttribArray(attribLocations.offset);
     gl.vertexAttribPointer(attribLocations.offset, 3, gl.FLOAT, false, 0, 0);
 
-    gl.drawArrays(gl.TRIANGLES, 0, this.numberOfParticles * 4);
+    gl.drawArrays(gl.TRIANGLES, 0, this.numberOfParticles * 3);
 
+    gl.disableVertexAttribArray(0);
     this.program.stopUsing();
   }
 }

@@ -55,6 +55,7 @@ function main() {
   let carStartingX = carMesh.x;
   let carStartingZ = carMesh.z;
 
+  /*
   setInterval(() => {
     currentCarAngle++;
     let radius = 1;
@@ -65,6 +66,7 @@ function main() {
 
     carMesh.x -= 0.001;
   }, 1);
+  */
 
   const camera = new Camera(context);
   camera.setCameraControls(userControl);
@@ -98,7 +100,7 @@ function main() {
 
   const scene = new Scene(context);
 
-  const particles = new Particles(context, 1000, carMesh, scene, camera);
+  const particles = new Particles(context, 2, carMesh, scene, camera);
   particles.initBuffers();
 
   let then = 0;
@@ -125,10 +127,9 @@ function main() {
     // carMesh.draw(program);
     // pointLight.draw(program);
 
+    gl.disableVertexAttribArray(0);
     program.stopUsing();
 
     particles.draw(deltaTime);
-
-    // gl.disableVertexAttribArray(0);
   }
 }
