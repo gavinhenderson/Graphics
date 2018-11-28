@@ -16,32 +16,15 @@ import bedroomTexture from "./bedroom.png";
 import carRaw from "./car.json";
 import carTexture from "./car-texture.png";
 import lightbulbRaw from "./lightbulb.json";
+import setupUserControls from "./setupUserControls";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
 main();
 
 function main() {
-  const userControl = new UserControl();
-
   const context = new Context("glCanvas");
   context.createVertexArray();
-
-  userControl.addKeyDownListener("arrowdown", (event) => {
-    lightbulbMesh.z += 0.1;
-  });
-
-  userControl.addKeyDownListener("arrowup", (event) => {
-    lightbulbMesh.z -= 0.1;
-  });
-
-  userControl.addKeyDownListener("arrowleft", (event) => {
-    lightbulbMesh.x -= 0.1;
-  });
-
-  userControl.addKeyDownListener("arrowright", (event) => {
-    lightbulbMesh.x += 0.1;
-  });
 
   const lightbulbMesh = new Mesh(context, lightbulbRaw);
   lightbulbMesh.setLocation([0, 0, 0]);
@@ -52,9 +35,8 @@ function main() {
 
   const pointLight = new PointLight(lightbulbMesh, context);
 
-  userControl.addKeyUpListener("1", (event) => {
-    pointLight.toggleLight();
-  });
+  const userControl = new UserControl();
+  setupUserControls(userControl, lightbulbMesh, pointLight);
 
   const bedroomMesh = new TexturedMesh(context, bedroomRaw, bedroomTexture);
   bedroomMesh.initBuffers();

@@ -1,4 +1,4 @@
-import { Shader, Program } from "../";
+import { createShader, Program } from "../";
 import vertRaw from "./particle.vert";
 import fragRaw from "./particle.frag";
 
@@ -15,6 +15,30 @@ class Particles {
     this.numberOfParticles = numberOfParticles;
 
     this.gl = context.gl;
+
+    const vertShader = createShader(
+      context.gl,
+      context.gl.VERTEX_SHADER,
+      vertRaw,
+    );
+
+    const fragShader = createShader(
+      context.gl,
+      context.gl.FRAGMENT_SHADER,
+      fragRaw,
+    );
+
+    this.program = new Program(context, { vertShader, fragShader });
+
+    this.program.addMultipleAttribs(["lifetime", "offsetFromCenter"]);
+
+    this.program.addMultipleUniforms([
+      "startingPos",
+      "time",
+      "projection",
+      "model",
+      "view",
+    ]);
   }
 
   initBuffers() {
