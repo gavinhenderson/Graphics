@@ -8,6 +8,7 @@ import {
   Scene,
   UserControl,
   PointLight,
+  Particles,
 } from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
@@ -25,6 +26,9 @@ main();
 function main() {
   const context = new Context("glCanvas");
   context.createVertexArray();
+
+  const particles = new Particles(context, 1000);
+  particles.initBuffers();
 
   const lightbulbMesh = new Mesh(context, lightbulbRaw);
   lightbulbMesh.setLocation([0, 0, 0]);

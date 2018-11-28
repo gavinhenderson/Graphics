@@ -55,7 +55,7 @@ class Particles {
 
     this.particlesColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.particlesColorBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, this.maxParticles * 4, NULL, GL_STREAM_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, this.maxParticles * 4, gl.STREAM_DRAW);
   }
 
   draw() {}
