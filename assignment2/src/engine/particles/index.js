@@ -3,14 +3,20 @@ import vertRaw from "./particle.vert";
 import fragRaw from "./particle.frag";
 
 class Particles {
-  constructor(context, numberOfParticles) {
+  constructor(context, numberOfParticles, mesh, scene, camera) {
+    this.mesh = mesh;
+    this.scene = scene;
+    this.camera = camera;
+
     // prettier-ignore
-    this.vertexBufferData = [
+    this.singleVertex = [
       -1.0, -1.0,
       1.0, -1.0,
       1.0, 1.0,
       -1.0, 1.0
-    ]
+    ];
+
+    this.time = 0;
 
     this.numberOfParticles = numberOfParticles;
 
@@ -30,7 +36,7 @@ class Particles {
 
     this.program = new Program(context, { vertShader, fragShader });
 
-    this.program.addMultipleAttribs(["lifetime", "offsetFromCenter"]);
+    this.program.addMultipleAttribs(["vertex", "lifetime", "offsetFromCenter"]);
 
     this.program.addMultipleUniforms([
       "startingPos",
@@ -41,24 +47,84 @@ class Particles {
     ]);
   }
 
+  getBufferData() {
+    let lifetimes = [];
+    let vertexes = [];
+    let offsets = [];
+    for (let i = 0; i < this.numberOfParticles; i++) {
+      let currentLifetime = Math.abs(Math.random() * 8);
+      let currentOffset = [0, 0, 0]; // Make random
+      vertexes.push(...this.singleVertex);
+
+      for (let j = 0; j < 4; j++) {
+        lifetimes.push(currentLifetime);
+        offsets.push(...currentOffset);
+      }
+    }
+
+    lifetimes = new Float32Array(lifetimes);
+    vertexes = new Float32Array(vertexes);
+    offsets = new Float32Array(offsets);
+
+    return { lifetimes, vertexes, offsets };
+  }
+
   initBuffers() {
     /** @type {WebGLRenderingContext} */
     const gl = this.gl;
 
+    const { lifetimes, vertexes, offsets } = this.getBufferData();
+
     this.vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, this.vertexBufferData, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, vertexes, gl.STATIC_DRAW);
 
-    this.particlesPositionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.particlesPositionBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, this.maxParticles * 4, gl.STREAM_DRAW);
+    this.lifetimeBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.lifetimeBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, lifetimes, gl.STATIC_DRAW);
 
-    this.particlesColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.particlesColorBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, this.maxParticles * 4, gl.STREAM_DRAW);
+    this.offsetBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.offsetBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, offsets, gl.STATIC_DRAW);
   }
 
-  draw() {}
+  draw(deltaTime) {
+    this.program.use();
+
+    this.time += deltaTime;
+
+    const model = this.mesh.getModel();
+    const projection = this.scene.getProjection();
+    const view = this.camera.getView();
+    this.startingPos = new Float32Array([0, 0, 0]);
+
+    const { attribLocations, uniformLocations } = this.program;
+    /** @type {WebGLRenderingContext} */
+    const gl = this.gl;
+    const { vertexBuffer, lifetimeBuffer, offsetBuffer } = this;
+
+    gl.uniformMatrix4fv(uniformLocations.model, false, model);
+    gl.uniform1f(uniformLocations.time, this.time);
+    gl.uniformMatrix4fv(uniformLocations.projection, false, projection);
+    gl.uniformMatrix4fv(uniformLocations.view, false, view);
+    gl.uniform3fv(uniformLocations.startingPos, this.startingPos);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    gl.enableVertexAttribArray(attribLocations.vertex);
+    gl.vertexAttribPointer(attribLocations.vertex, 2, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, lifetimeBuffer);
+    gl.enableVertexAttribArray(attribLocations.lifetime);
+    gl.vertexAttribPointer(attribLocations.lifetime, 1, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, offsetBuffer);
+    gl.enableVertexAttribArray(attribLocations.offset);
+    gl.vertexAttribPointer(attribLocations.offset, 3, gl.FLOAT, false, 0, 0);
+
+    gl.drawArrays(gl.TRIANGLES, 0, this.numberOfParticles * 4);
+
+    this.program.stopUsing();
+  }
 }
 
 export default Particles;

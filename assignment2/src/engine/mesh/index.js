@@ -61,30 +61,28 @@ class Mesh {
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
   }
 
-  draw(program) {
-    const gl = this.gl;
-    const { attribLocations } = program;
-
-    const {
-      vertexBuffer,
-      normalsBuffer,
-      indicies,
-      scale,
-      rotX,
-      rotY,
-      rotZ,
-    } = this;
-
-    gl.uniform1i(program.uniformLocations.colourMode, this.colourMode);
-    gl.uniform1i(program.uniformLocations.lightingMode, this.lightingMode);
-
+  getModel() {
     const model = mat4.create();
     mat4.translate(model, model, this.getLocation());
-    mat4.rotate(model, model, Math.radians(rotX), [1, 0, 0]);
-    mat4.rotate(model, model, Math.radians(rotY), [0, 1, 0]);
-    mat4.rotate(model, model, Math.radians(rotZ), [0, 0, 1]);
-    mat4.scale(model, model, scale);
-    gl.uniformMatrix4fv(program.uniformLocations.model, false, model);
+    mat4.rotate(model, model, Math.radians(this.rotX), [1, 0, 0]);
+    mat4.rotate(model, model, Math.radians(this.rotY), [0, 1, 0]);
+    mat4.rotate(model, model, Math.radians(this.rotZ), [0, 0, 1]);
+    mat4.scale(model, model, this.scale);
+
+    return model;
+  }
+
+  draw(program) {
+    const gl = this.gl;
+    const { attribLocations, uniformLocations } = program;
+
+    const { vertexBuffer, normalsBuffer, indicies } = this;
+
+    gl.uniform1i(uniformLocations.colourMode, this.colourMode);
+    gl.uniform1i(uniformLocations.lightingMode, this.lightingMode);
+
+    const model = this.getModel();
+    gl.uniformMatrix4fv(uniformLocations.model, false, model);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     gl.enableVertexAttribArray(attribLocations.position);

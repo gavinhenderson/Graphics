@@ -17,12 +17,19 @@ class Scene {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   }
 
-  draw(program) {
+  getProjection() {
     const { gl } = this;
 
     const aspectRatio = gl.canvas.clientWidth / gl.canvas.clientHeight;
     const projection = mat4.create();
     mat4.perspective(projection, Math.radians(30), aspectRatio, 0.1, 100);
+    return projection;
+  }
+
+  draw(program) {
+    const { gl } = this;
+
+    const projection = this.getProjection();
     gl.uniformMatrix4fv(program.uniformLocations.projection, false, projection);
   }
 }

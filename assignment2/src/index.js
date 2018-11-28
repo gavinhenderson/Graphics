@@ -27,9 +27,6 @@ function main() {
   const context = new Context("glCanvas");
   context.createVertexArray();
 
-  const particles = new Particles(context, 1000);
-  particles.initBuffers();
-
   const lightbulbMesh = new Mesh(context, lightbulbRaw);
   lightbulbMesh.setLocation([0, 0, 0]);
   lightbulbMesh.setScale(0.005);
@@ -101,6 +98,9 @@ function main() {
 
   const scene = new Scene(context);
 
+  const particles = new Particles(context, 1000, carMesh, scene, camera);
+  particles.initBuffers();
+
   let then = 0;
   function render(now) {
     now *= 0.001;
@@ -125,7 +125,10 @@ function main() {
     carMesh.draw(program);
     pointLight.draw(program);
 
-    gl.disableVertexAttribArray(0);
     program.stopUsing();
+
+    particles.draw();
+
+    gl.disableVertexAttribArray(0);
   }
 }
