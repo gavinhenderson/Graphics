@@ -121,14 +121,14 @@ function main() {
 
     scene.draw(program);
     camera.draw(program);
-    bedroomMesh.draw(program);
-    carMesh.draw(program);
-    pointLight.draw(program);
+    // bedroomMesh.draw(program);
+    // carMesh.draw(program);
+    // pointLight.draw(program);
 
     program.stopUsing();
 
-    particles.draw();
+    particles.draw(deltaTime);
 
-    gl.disableVertexAttribArray(0);
+    // gl.disableVertexAttribArray(0);
   }
 }

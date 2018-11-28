@@ -1,6 +1,7 @@
 import { createShader, Program } from "../";
 import vertRaw from "./particle.vert";
 import fragRaw from "./particle.frag";
+import { mat4 } from "gl-matrix";
 
 class Particles {
   constructor(context, numberOfParticles, mesh, scene, camera) {
@@ -96,12 +97,14 @@ class Particles {
     const model = this.mesh.getModel();
     const projection = this.scene.getProjection();
     const view = this.camera.getView();
-    this.startingPos = new Float32Array([0, 0, 0]);
+    this.startingPos = this.mesh.getLocation();
 
     const { attribLocations, uniformLocations } = this.program;
     /** @type {WebGLRenderingContext} */
     const gl = this.gl;
     const { vertexBuffer, lifetimeBuffer, offsetBuffer } = this;
+
+    // mat4.scale(model, model, [5, 5, 5]);
 
     gl.uniformMatrix4fv(uniformLocations.model, false, model);
     gl.uniform1f(uniformLocations.time, this.time);

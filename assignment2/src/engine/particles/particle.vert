@@ -14,7 +14,7 @@ void main(){
   float currentPointInCycle = mod(time, lifetime);
   float velocity = 1.0;
   float size = (lifetime * lifetime) * 0.05;
-
+  //float size = 1.0;
 
   vec4 position = vec4(startingPos + offsetFromCenter + (currentPointInCycle * velocity),1.0);
   position.xy += vertex.xy * size;
