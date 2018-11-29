@@ -109,7 +109,11 @@ function main() {
     "lightPower",
     "lightingMode",
     "mode",
+    "texture1",
+    "texture2",
   ]);
+
+  console.log(program);
 
   const scene = new Scene(context);
 
@@ -132,6 +136,8 @@ function main() {
     scene.preDraw();
     program.use();
 
+    gl.uniform1i(program.uniformLocations.texture1, 0); // texture unit 0
+    gl.uniform1i(program.uniformLocations.texture2, 1); // texture unit 1
     gl.uniform1i(program.uniformLocations.mode, 1);
 
     scene.draw(program);

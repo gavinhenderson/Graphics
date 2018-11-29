@@ -8,10 +8,28 @@ class NormalMapMesh extends TexturedMesh {
     const gl = context.gl;
     this.gl = gl;
 
-    this.texture = gl.createTexture();
     let image = new Image();
     image.onload = () => {
       this.image = image;
+
+      // gl.activeTexture(gl.TEXTURE1);
+      this.texture = gl.createTexture();
+
+      gl.activeTexture(gl.TEXTURE1);
+      //gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
+      gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        this.image,
+      );
+
+      gl.generateMipmap(gl.TEXTURE_2D);
     };
 
     image.src = normalImg;
@@ -23,15 +41,6 @@ class NormalMapMesh extends TexturedMesh {
     if (this.image) {
       gl.activeTexture(gl.TEXTURE1);
       gl.bindTexture(gl.TEXTURE_2D, this.texture);
-      gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        gl.RGBA,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        this.image,
-      );
-      gl.generateMipmap(gl.TEXTURE_2D);
     }
 
     super.draw(program);
