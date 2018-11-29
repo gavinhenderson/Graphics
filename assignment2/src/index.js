@@ -19,9 +19,10 @@ import carRaw from "./car.json";
 import carTexture from "./car-texture.png";
 import lightbulbRaw from "./lightbulb.json";
 import setupUserControls from "./setupUserControls";
-import wallRaw from "./wall.json";
+import floorRaw from "./floor.json";
 import pebbleDashTexture from "../raw/pebbledash-tile.jpg";
 import pebbleDashNormalMap from "../raw/pebble-dash-normal.png";
+import floorTexture from "../raw/floor.png";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
@@ -33,21 +34,15 @@ function main() {
 
   const lightbulbMesh = new Mesh(context, lightbulbRaw);
   lightbulbMesh.setLocation([0, 0, 0]);
-  lightbulbMesh.setScale(0.005);
+  lightbulbMesh.setScale(0.01);
   lightbulbMesh.addRotationZ(180);
   lightbulbMesh.initBuffers();
-  lightbulbMesh.y += 0.5;
+  lightbulbMesh.y = 5;
 
-  const wallMesh = new NormalMapMesh(
-    context,
-    wallRaw,
-    pebbleDashTexture,
-    pebbleDashNormalMap,
-  );
-  wallMesh.setLocation([1, -1, -2.7]);
-  wallMesh.addRotationY(5);
-  wallMesh.scale = [2.7, 1.6, 1];
-  wallMesh.initBuffers();
+  const floorMesh = new TexturedMesh(context, floorRaw, floorTexture);
+  floorMesh.setLocation([1, -1.65, -1]);
+  floorMesh.scale = [7.5, 1, 7.5];
+  floorMesh.initBuffers();
 
   const pointLight = new PointLight(lightbulbMesh, context);
 
@@ -146,7 +141,7 @@ function main() {
     roomMesh.draw(program);
     carMesh.draw(program);
     pointLight.draw(program);
-    // wallMesh.draw(program);
+    floorMesh.draw(program);
 
     gl.disableVertexAttribArray(0);
     program.stopUsing();
