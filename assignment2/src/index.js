@@ -23,6 +23,7 @@ import floorRaw from "./floor.json";
 import pebbleDashTexture from "../raw/pebbledash-tile.jpg";
 import pebbleDashNormalMap from "../raw/pebble-dash-normal.png";
 import floorTexture from "../raw/floor.png";
+import floorNormalMap from "../raw/floornormal.png";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
@@ -39,7 +40,12 @@ function main() {
   lightbulbMesh.initBuffers();
   lightbulbMesh.y = 5;
 
-  const floorMesh = new TexturedMesh(context, floorRaw, floorTexture);
+  const floorMesh = new NormalMapMesh(
+    context,
+    floorRaw,
+    floorTexture,
+    floorNormalMap,
+  );
   floorMesh.setLocation([1, -1.65, -1]);
   floorMesh.scale = [7.5, 1, 7.5];
   floorMesh.initBuffers();
@@ -108,8 +114,6 @@ function main() {
     "texture1",
     "texture2",
   ]);
-
-  console.log(program);
 
   const scene = new Scene(context);
 
