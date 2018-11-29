@@ -67,16 +67,19 @@ void main()
   } else if (colourMode == 3) {
     ambientColor = texture(texture1, ftexcoord).xyz;
     vec3 normalMapTex = texture(texture2, ftexcoord).xyz;
-    normalMapCurrent = normalMapTex.rgb * 2.0 - 1.0;
   }
 
   vec3 colorLinear;
   if(lightingMode == 1) {
     colorLinear = getLight(ambientColor, normalMapCurrent);
+    if(lightPower == 0.0) {
+      colorLinear = ambientColor * 0.1;
+    }
+
   } else {
     colorLinear = ambientColor;
     if(lightPower == 0.0) {
-      colorLinear = ambientColor * 0.5;
+      colorLinear = ambientColor * 0.01;
     }
   }
 
