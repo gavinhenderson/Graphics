@@ -10,12 +10,12 @@ class Camera {
 
     this.lookSensitivity = 0.1;
 
-    this.x = 0;
-    this.y = 0;
-    this.z = -10;
+    this.x = -21.7;
+    this.y = -7.4;
+    this.z = 13;
 
-    this.rotX = 0;
-    this.rotY = 0;
+    this.rotX = -120;
+    this.rotY = 12;
 
     this.speed = 1;
 

@@ -66,8 +66,8 @@ void main()
     }
   } else if (colourMode == 3) {
     ambientColor = texture(texture1, ftexcoord).xyz;
-    //vec3 normalMapTex = texture(texture2, ftexcoord).xyz;
-    //normalMapCurrent = normalMapTex.rgb * 2.0 - 1.0;
+    vec3 normalMapTex = texture(texture2, ftexcoord).xyz;
+    normalMapCurrent = normalMapTex.rgb * 2.0 - 1.0;
   }
 
   vec3 colorLinear;

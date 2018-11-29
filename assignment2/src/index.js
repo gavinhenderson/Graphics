@@ -13,8 +13,8 @@ import {
 } from "./engine";
 import vertSource from "./shader.vert";
 import fragSource from "./shader.frag";
-import bedroomRaw from "./bedroom.json";
-import bedroomTexture from "./bedroom.png";
+import roomRaw from "./room.json";
+import roomTexture from "../raw/iso-room/texture.png";
 import carRaw from "./car.json";
 import carTexture from "./car-texture.png";
 import lightbulbRaw from "./lightbulb.json";
@@ -54,17 +54,18 @@ function main() {
   const userControl = new UserControl();
   setupUserControls(userControl, lightbulbMesh, pointLight);
 
-  const bedroomMesh = new TexturedMesh(context, bedroomRaw, bedroomTexture);
-  bedroomMesh.initBuffers();
-  bedroomMesh.setLocation([0, -2, 0]);
-  bedroomMesh.addRotationY(180);
+  const roomMesh = new TexturedMesh(context, roomRaw, roomTexture);
+  roomMesh.initBuffers();
+  roomMesh.setLocation([0, -2, 0]);
+  // roomMesh.setScale(0.5);
+  roomMesh.addRotationY(180);
 
   const carMesh = new TexturedMesh(context, carRaw, carTexture);
   carMesh.x = 0.5;
   carMesh.z = 0.5;
   carMesh.initBuffers();
-  carMesh.y = -2.6;
-  carMesh.setScale(0.5);
+  carMesh.y = -1;
+  carMesh.setScale(1);
 
   let currentCarAngle = 0;
   let carStartingX = carMesh.x;
@@ -142,10 +143,10 @@ function main() {
 
     scene.draw(program);
     camera.draw(program);
-    bedroomMesh.draw(program);
+    roomMesh.draw(program);
     carMesh.draw(program);
     pointLight.draw(program);
-    wallMesh.draw(program);
+    // wallMesh.draw(program);
 
     gl.disableVertexAttribArray(0);
     program.stopUsing();
