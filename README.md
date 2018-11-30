@@ -17,6 +17,6 @@ This engine came about from a piece of a coursework for a Graphics module. You c
 
 There is none.
 
-# Contributing
+## Contributing
 
 This project is not maintained and no contributions will be accepted.
