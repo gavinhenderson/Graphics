@@ -19,6 +19,7 @@ const vec3 diffuseColor = vec3(1.0, 1.0, 1.0);
 const vec3 specColor = vec3(1.0, 1.0, 1.0);
 const float shininess = 0.1;
 
+uniform int normalMapOn;
 uniform int colourMode;
 uniform int lightingMode;
 uniform sampler2D texture1;
@@ -66,8 +67,10 @@ void main()
     }
   } else if (colourMode == 3) {
     ambientColor = texture(texture1, ftexcoord).xyz;
-    vec4 normal_from_map = texture(texture2, ftexcoord);
-    normalMapCurrent = 2.0 * normal_from_map - 1.0;
+    if(normalMapOn == 1){
+      vec4 normal_from_map = texture(texture2, ftexcoord);
+      normalMapCurrent = 2.0 * normal_from_map - 1.0;
+    }
   }
 
   vec3 colorLinear;

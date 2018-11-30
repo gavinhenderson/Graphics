@@ -20,8 +20,6 @@ import carTexture from "./car-texture.png";
 import lightbulbRaw from "./lightbulb.json";
 import setupUserControls from "./setupUserControls";
 import floorRaw from "./floor.json";
-import pebbleDashTexture from "../raw/pebbledash-tile.jpg";
-import pebbleDashNormalMap from "../raw/pebble-dash-normal.png";
 import floorTexture from "../raw/floor.png";
 import floorNormalMap from "../raw/floornormal.png";
 import "./index.css";
@@ -33,6 +31,9 @@ main();
 function main() {
   const context = new Context("glCanvas");
   context.createVertexArray();
+
+  /** @type {WebGLRenderingContext} */
+  const gl = context.gl;
 
   const lightbulbMesh = new Mesh(context, lightbulbRaw);
   lightbulbMesh.setLocation([0, 0, 0]);
@@ -53,8 +54,13 @@ function main() {
 
   const pointLight = new PointLight(lightbulbMesh, context);
 
+  let normalMapOn = 1;
   const userControl = new UserControl();
   setupUserControls(userControl, lightbulbMesh, pointLight);
+
+  userControl.addKeyUpListener("2", (event) => {
+    normalMapOn = normalMapOn == 1 ? 2 : 1;
+  });
 
   const roomMesh = new TexturedMesh(context, roomRaw, roomTexture);
   roomMesh.initBuffers();
@@ -114,6 +120,7 @@ function main() {
     "mode",
     "texture1",
     "texture2",
+    "normalMapOn",
   ]);
 
   const scene = new Scene(context);
@@ -140,6 +147,7 @@ function main() {
     gl.uniform1i(program.uniformLocations.texture1, 0); // texture unit 0
     gl.uniform1i(program.uniformLocations.texture2, 1); // texture unit 1
     gl.uniform1i(program.uniformLocations.mode, 1);
+    gl.uniform1i(program.uniformLocations.normalMapOn, normalMapOn);
 
     scene.draw(program);
     camera.draw(program);
