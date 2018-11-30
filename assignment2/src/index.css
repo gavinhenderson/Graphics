@@ -11,4 +11,5 @@ body {
 .keyboard-controls {
   position: absolute;
   background-color: white;
+  margin: 8px;
 }
