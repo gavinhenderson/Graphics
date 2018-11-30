@@ -24,8 +24,8 @@ uniform int lightingMode;
 uniform sampler2D texture1;
 uniform sampler2D texture2;
 
-vec3 getLight(vec3 ambientColor, vec3 normalMapCurrent) {
-  vec3 normal = normalize(normalInterp) * normalMapCurrent;
+vec3 getLight(vec3 ambientColor, vec4 normalMapCurrent) {
+  vec3 normal = normalize(normalInterp * normalMapCurrent.xyz);
   vec3 lightDir = lightPos - vertPos;
   float distance = length(lightDir);
   distance = distance * distance;
@@ -54,7 +54,7 @@ vec3 getLight(vec3 ambientColor, vec3 normalMapCurrent) {
 void main()
 {
   vec3 ambientColor;
-  vec3 normalMapCurrent = vec3(1,1,1);
+  vec4 normalMapCurrent = vec4(1,1,1,1);
 
   if(colourMode == 1) {
     ambientColor = texture(texture1, ftexcoord).xyz;
@@ -66,7 +66,8 @@ void main()
     }
   } else if (colourMode == 3) {
     ambientColor = texture(texture1, ftexcoord).xyz;
-    vec3 normalMapTex = texture(texture2, ftexcoord).xyz;
+    vec4 normal_from_map = texture(texture2, ftexcoord);
+    normalMapCurrent = 2.0 * normal_from_map - 1.0;
   }
 
   vec3 colorLinear;

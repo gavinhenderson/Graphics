@@ -24,6 +24,7 @@ import pebbleDashTexture from "../raw/pebbledash-tile.jpg";
 import pebbleDashNormalMap from "../raw/pebble-dash-normal.png";
 import floorTexture from "../raw/floor.png";
 import floorNormalMap from "../raw/floornormal.png";
+import "./index.css";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
 
@@ -65,7 +66,7 @@ function main() {
   carMesh.x = 0.5;
   carMesh.z = 0.5;
   carMesh.initBuffers();
-  carMesh.y = -1;
+  carMesh.y = -1.2;
   carMesh.setScale(1);
 
   let currentCarAngle = 0;
@@ -74,7 +75,7 @@ function main() {
 
   setInterval(() => {
     currentCarAngle++;
-    let radius = 1;
+    let radius = 2;
     carMesh.rotY = -currentCarAngle;
     const theta = Math.radians(currentCarAngle);
     carMesh.x = Math.cos(theta) * radius + carStartingX;
