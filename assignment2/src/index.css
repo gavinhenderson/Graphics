@@ -12,4 +12,17 @@ body {
   position: absolute;
   background-color: white;
   margin: 8px;
+  padding: 8px;
+  border-radius: 25px;
+  border: 2px solid black;
+  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.controls-title {
+  font-size: 18px;
+}
+
+.keyboard-controls p {
+  font-size: 14px;
+  margin: 8px 0;
 }
