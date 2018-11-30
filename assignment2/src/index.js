@@ -62,10 +62,17 @@ function main() {
     normalMapOn = normalMapOn == 1 ? 2 : 1;
   });
 
+  let particleMode = false;
+
+  userControl.addKeyUpListener("4", (event) => {
+    // particleMode = !particleMode;
+    //if (particleMode) isCarMoving = false;
+    //else isCarMoving = true;
+  });
+
   const roomMesh = new TexturedMesh(context, roomRaw, roomTexture);
   roomMesh.initBuffers();
   roomMesh.setLocation([0, -2, 0]);
-  // roomMesh.setScale(0.5);
   roomMesh.addRotationY(180);
 
   const carMesh = new TexturedMesh(context, carRaw, carTexture);
@@ -79,21 +86,28 @@ function main() {
   let carStartingX = carMesh.x;
   let carStartingZ = carMesh.z;
 
-  setInterval(() => {
-    currentCarAngle++;
-    let radius = 2;
-    carMesh.rotY = -currentCarAngle;
-    const theta = Math.radians(currentCarAngle);
-    carMesh.x = Math.cos(theta) * radius + carStartingX;
-    carMesh.z = Math.sin(theta) * radius + carStartingZ;
+  let isCarMoving = true;
 
-    carMesh.x -= 0.001;
+  userControl.addKeyUpListener("3", (event) => {
+    isCarMoving = !isCarMoving;
+  });
+
+  setInterval(() => {
+    if (isCarMoving) {
+      currentCarAngle++;
+      let radius = 2;
+      carMesh.rotY = -currentCarAngle;
+      const theta = Math.radians(currentCarAngle);
+      carMesh.x = Math.cos(theta) * radius + carStartingX;
+      carMesh.z = Math.sin(theta) * radius + carStartingZ;
+
+      carMesh.x -= 0.001;
+    }
   }, 1);
 
   const camera = new Camera(context);
   camera.setCameraControls(userControl);
 
-  /* Build both shaders */
   const vertShader = createShader(
     context.gl,
     context.gl.VERTEX_SHADER,
@@ -125,8 +139,8 @@ function main() {
 
   const scene = new Scene(context);
 
-  // const particles = new Particles(context, 5, carMesh, scene, camera);
-  // particles.initBuffers();
+  const particles = new Particles(context, 10, carMesh, scene, camera);
+  particles.initBuffers();
 
   let then = 0;
   function render(now) {
@@ -151,14 +165,19 @@ function main() {
 
     scene.draw(program);
     camera.draw(program);
-    roomMesh.draw(program);
-    carMesh.draw(program);
-    pointLight.draw(program);
-    floorMesh.draw(program);
+
+    if (!particleMode) {
+      roomMesh.draw(program);
+      carMesh.draw(program);
+      pointLight.draw(program);
+      floorMesh.draw(program);
+    }
 
     gl.disableVertexAttribArray(0);
     program.stopUsing();
 
-    // particles.draw(deltaTime);
+    if (particleMode) {
+      particles.draw(deltaTime);
+    }
   }
 }

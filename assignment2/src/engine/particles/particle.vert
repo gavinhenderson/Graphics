@@ -14,7 +14,7 @@ void main(){
   float currentPointInCycle = mod(currentTime, lifetime);
   
   float velocity = 1.0;
-  float size = 0.1;
+  float size = 0.001;
 
   bool billboarding = true;
   vec3 origin = vec3(startingPos + offsetFromCenter);
@@ -23,7 +23,7 @@ void main(){
   // this.x = Math.sin(theta) * this.radius;
 
   float angle = currentPointInCycle * 18.0;
-  float radius = 2.0;
+  float radius = 8.0;
 
   float currentX = cos(radians(angle)) * radius;
   float currentY = sin(radians(angle)) * radius;
@@ -59,6 +59,6 @@ void main(){
 
   vec4 vertPos4 = projection * modelview * position;
 
-  gl_Position = vertPos4;
+  gl_Position = vertPos4 * size;
   
 }

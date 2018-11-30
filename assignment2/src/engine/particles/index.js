@@ -53,8 +53,8 @@ class Particles {
     let vertexes = [];
     let offsets = [];
     for (let i = 0; i < this.numberOfParticles; i++) {
-      // let currentLifetime = Math.random() * 10;
-      let currentLifetime = 10;
+      let currentLifetime = Math.random() * 10;
+      //let currentLifetime = 10;
       let currentOffset = [0, 0, 0]; // Make random
       vertexes.push(...this.singleVertex);
 
