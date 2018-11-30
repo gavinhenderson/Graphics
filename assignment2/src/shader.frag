@@ -22,33 +22,34 @@ const float shininess = 3.0;
 uniform int normalMapOn;
 uniform int colourMode;
 uniform int lightingMode;
+uniform int isAmbientOn;
 uniform sampler2D texture1;
-uniform sampler2D texture2;
 
+// https://en.wikipedia.org/wiki/Blinn%E2%80%93Phong_shading_model
 vec3 getLight(vec3 ambientColor, vec4 normalMapCurrent) {
   vec3 normal = normalize(normalInterp * normalMapCurrent.xyz);
-  vec3 lightDir = lightPos - vertPos;
-  float distance = length(lightDir);
+  vec3 direction = lightPos - vertPos;
+  float distance = length(direction);
   distance = distance * distance;
-  lightDir = normalize(lightDir);
+  direction = normalize(direction);
 
-  float lambertian = max(dot(lightDir,normal), 0.0);
+  float lambertian = max(dot(direction,normal), 0.0);
   float specular = 0.0;
 
   if(lambertian > 0.0) {
     vec3 viewDir = normalize(-vertPos);
-    vec3 halfDir = normalize(lightDir + viewDir);
+    vec3 halfDir = normalize(direction + viewDir);
     float specAngle = max(dot(halfDir, normal), 0.0);
     specular = pow(specAngle, shininess);
   }
 
   float newLightPower = lightPower;
 
-  vec3 colorLinear = ambientColor +
+  vec3 lightAdjustedColour = ambientColor +
                      diffuseColor * lambertian * lightColor * newLightPower / distance +
                      specColor * specular * lightColor * newLightPower / distance;
 
-  return colorLinear;
+  return lightAdjustedColour;
 
 }
 
@@ -67,26 +68,27 @@ void main()
     }
   } else if (colourMode == 3) {
     ambientColor = texture(texture1, ftexcoord).xyz;
-    if(normalMapOn == 1){
-      vec4 normal_from_map = texture(texture2, ftexcoord);
-      normalMapCurrent = 2.0 * normal_from_map - 1.0;
-    }
   }
 
-  vec3 colorLinear;
+  vec3 finalColour;
   if(lightingMode == 1) {
-    colorLinear = getLight(ambientColor * 0.6, normalMapCurrent);
-    // colorLinear = ambientColor * 0.6;
+
+    
+
+    finalColour = getLight(ambientColor * 0.6, normalMapCurrent);
     if(lightPower == 0.0) {
-      colorLinear = ambientColor * 0.1;
+      float ambientMuliplier = 0.1;
+
+      if(isAmbientOn == 1) ambientMuliplier = 0.8;
+      finalColour = ambientColor * ambientMuliplier;
     }
 
   } else {
-    colorLinear = ambientColor;
+    finalColour = ambientColor;
     if(lightPower == 0.0) {
-      colorLinear = ambientColor * 0.01;
+      finalColour = ambientColor * 0.01;
     }
   }
 
-  fragColor = vec4(colorLinear, 1.0);
+  fragColor = vec4(finalColour, 1.0);
 }

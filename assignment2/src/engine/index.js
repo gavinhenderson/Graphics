@@ -8,7 +8,7 @@ import Scene from "./scene";
 import UserControl from "./user-control";
 import PointLight from "./point-light";
 import Particles from "./particles";
-import NormalMapMesh from "./normal-map-mesh";
+import HeightMapMesh from "./height-map-mesh";
 
 export {
   createShader,
@@ -21,5 +21,5 @@ export {
   UserControl,
   PointLight,
   Particles,
-  NormalMapMesh,
+  HeightMapMesh,
 };

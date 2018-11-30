@@ -4,7 +4,7 @@ import {
   Program,
   Mesh,
   TexturedMesh,
-  NormalMapMesh,
+  HeightMapMesh,
   Camera,
   Scene,
   UserControl,
@@ -19,9 +19,9 @@ import carRaw from "./car.json";
 import carTexture from "./car-texture.png";
 import lightbulbRaw from "./lightbulb.json";
 import setupUserControls from "./setupUserControls";
-import floorRaw from "./floor.json";
+import floorRaw from "./highPolyFloor.json";
 import floorTexture from "../raw/floor.png";
-import floorNormalMap from "../raw/floornormal.png";
+import floorHeightMap from "../raw/floorheight.png";
 import "./index.css";
 
 Math.radians = (degrees) => (Math.PI * degrees) / 180;
@@ -42,11 +42,11 @@ function main() {
   lightbulbMesh.initBuffers();
   lightbulbMesh.y = 5;
 
-  const floorMesh = new NormalMapMesh(
+  const floorMesh = new HeightMapMesh(
     context,
     floorRaw,
     floorTexture,
-    floorNormalMap,
+    floorHeightMap,
   );
   floorMesh.setLocation([1, -1.65, -1]);
   floorMesh.scale = [7.5, 1, 7.5];
@@ -92,6 +92,12 @@ function main() {
     isCarMoving = !isCarMoving;
   });
 
+  let isAmbientOn = false;
+
+  userControl.addKeyUpListener("4", (event) => {
+    isAmbientOn = !isAmbientOn;
+  });
+
   setInterval(() => {
     if (isCarMoving) {
       currentCarAngle++;
@@ -134,7 +140,8 @@ function main() {
     "mode",
     "texture1",
     "texture2",
-    "normalMapOn",
+    "heightMapOn",
+    "isAmbientOn",
   ]);
 
   const scene = new Scene(context);
@@ -158,26 +165,23 @@ function main() {
     scene.preDraw();
     program.use();
 
-    gl.uniform1i(program.uniformLocations.texture1, 0); // texture unit 0
-    gl.uniform1i(program.uniformLocations.texture2, 1); // texture unit 1
+    gl.uniform1i(program.uniformLocations.texture1, 0);
+    gl.uniform1i(program.uniformLocations.texture2, 1);
+    gl.uniform1i(program.uniformLocations.isAmbientOn, isAmbientOn ? 1 : 2);
     gl.uniform1i(program.uniformLocations.mode, 1);
-    gl.uniform1i(program.uniformLocations.normalMapOn, normalMapOn);
+    gl.uniform1i(program.uniformLocations.heightMapOn, 0);
 
     scene.draw(program);
     camera.draw(program);
 
-    if (!particleMode) {
-      roomMesh.draw(program);
-      carMesh.draw(program);
-      pointLight.draw(program);
-      floorMesh.draw(program);
-    }
+    roomMesh.draw(program);
+    carMesh.draw(program);
+    pointLight.draw(program);
+
+    if (normalMapOn == 1) gl.uniform1i(program.uniformLocations.heightMapOn, 1);
+    floorMesh.draw(program);
 
     gl.disableVertexAttribArray(0);
     program.stopUsing();
-
-    if (particleMode) {
-      particles.draw(deltaTime);
-    }
   }
 }
