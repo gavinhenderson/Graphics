@@ -17,7 +17,7 @@ class PointLight {
       this.mesh.getLocation(),
     );
 
-    const lightPower = this.isLightOn ? 1 : 0;
+    const lightPower = this.isLightOn ? 20 : 0;
     this.gl.uniform1f(program.uniformLocations.lightPower, lightPower);
 
     this.mesh.draw(program);

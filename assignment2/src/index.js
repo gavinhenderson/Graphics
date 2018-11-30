@@ -36,9 +36,9 @@ function main() {
   const gl = context.gl;
 
   const lightbulbMesh = new Mesh(context, lightbulbRaw);
-  lightbulbMesh.setLocation([0, 0, 0]);
+  //lightbulbMesh.setLocation([0, 0, 0]);
   lightbulbMesh.setScale(0.01);
-  lightbulbMesh.addRotationZ(180);
+  //lightbulbMesh.addRotationZ(180);
   lightbulbMesh.initBuffers();
   lightbulbMesh.y = 5;
 

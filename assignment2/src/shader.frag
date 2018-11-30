@@ -17,7 +17,7 @@ uniform float lightPower;
 const vec3 lightColor = vec3(1.0, 1.0, 1.0);
 const vec3 diffuseColor = vec3(1.0, 1.0, 1.0);
 const vec3 specColor = vec3(1.0, 1.0, 1.0);
-const float shininess = 0.1;
+const float shininess = 3.0;
 
 uniform int normalMapOn;
 uniform int colourMode;
@@ -37,16 +37,16 @@ vec3 getLight(vec3 ambientColor, vec4 normalMapCurrent) {
 
   if(lambertian > 0.0) {
     vec3 viewDir = normalize(-vertPos);
-
-    // this is blinn phong
     vec3 halfDir = normalize(lightDir + viewDir);
     float specAngle = max(dot(halfDir, normal), 0.0);
     specular = pow(specAngle, shininess);
   }
 
+  float newLightPower = lightPower;
+
   vec3 colorLinear = ambientColor +
-                     diffuseColor * lambertian * lightColor * lightPower / distance +
-                     specColor * specular * lightColor * lightPower / distance;
+                     diffuseColor * lambertian * lightColor * newLightPower / distance +
+                     specColor * specular * lightColor * newLightPower / distance;
 
   return colorLinear;
 
@@ -75,7 +75,8 @@ void main()
 
   vec3 colorLinear;
   if(lightingMode == 1) {
-    colorLinear = getLight(ambientColor, normalMapCurrent);
+    colorLinear = getLight(ambientColor * 0.6, normalMapCurrent);
+    // colorLinear = ambientColor * 0.6;
     if(lightPower == 0.0) {
       colorLinear = ambientColor * 0.1;
     }
